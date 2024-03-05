@@ -31,7 +31,7 @@ export const config = {
 export default auth((req) => {
   // req.auth
   
-  console.log('Authentication should happen', req.auth?.user)
+  console.log('Authentication should happen', req.auth)
   if(!req.auth?.user) {
     console.log('redirect');
     return NextResponse.redirect(process.env.NEXT_PUBLIC_URL + '/api/auth/signin');
