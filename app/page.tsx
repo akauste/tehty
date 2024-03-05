@@ -13,7 +13,7 @@ export default async function Home() {
   //const todos = await getServerSideProps();
 
   return (
-    <main className="flex min-h-screen max-w-[800px] flex-col items-center justify-between py-4 center">
+    <main className="flex min-h-screen max-w-[800px] flex-col items-center justify-between py-4 mx-auto">
       <div className="z-10 w-full text-sm p-4 bg-white">
         <h1 className="text-2xl">Practice app</h1>
         <p>Paragraph 1 here</p>

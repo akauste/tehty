@@ -20,12 +20,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="border-b-2 border-slate-300 p-4 bg-slate-200">
+        <header className="border-b border-green-200 p-4 bg-green-100 flex flex-row">
+          <h1 className="text-green-800 font-bold text-2xl flex-grow">Practice app</h1>
+ 
           <div className="text-right">
             { session?.user &&
               <span className="p-2">{ session.user.email }</span>
             }
-            <a href="/api/auth/signout" className="p-2 m-2 border border-blue-700 rounded bg-blue-600 text-slate-200 hover:text-white">Sign out</a>
+            <a href="/api/auth/signout" className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white">Sign out</a>
           </div>
         </header>
         {children}
