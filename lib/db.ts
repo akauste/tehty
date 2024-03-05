@@ -28,7 +28,7 @@ export async function addTodo(todo: NewTodo) {
     .executeTakeFirstOrThrow();
 }
 
-export async function deleteTodo(id: Number) {
+export async function deleteTodo(id: Number, user_id: string) {
   return db.deleteFrom('todo')
     .where('todo_id', '=', id)
     .execute();
