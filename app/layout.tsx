@@ -16,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <header>
+          <a href="/api/auth/signout" className="float-end">Sign out</a>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }

@@ -3,6 +3,7 @@ import Image from "next/image";
 import TodoItem from "./components/todo-item";
 
 export default async function Home() {
+  console.log('Home page here');
   const todos = await getServerSideProps();
 
   return (
