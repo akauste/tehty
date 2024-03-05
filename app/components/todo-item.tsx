@@ -23,10 +23,10 @@ const TodoItem: React.FC<ITodo> = ({todo, remove}) => {
     remove(todo.todo_id)
   }
 
-  return <li className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' }`}>
-              <input type="checkbox" checked={t.done} onChange={(e) => toggleDone()} />
-              { todo.task }
-              <button onClick={removeThis}>Remove</button>
+  return <li className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' } flex flex-row w-full space-between my-2`}>
+              <input className="flex" type="checkbox" checked={t.done} onChange={(e) => toggleDone()} />
+              <span className="mx-2 grow">{ todo.task }</span>
+              <button onClick={removeThis} className="mx p-1 border border-gray-700 rounded-sm text-xs bg-gray-200 text-gray-700 hover:text-gray-900 text-right">Remove</button>
   </li>;
 };
 export default TodoItem;

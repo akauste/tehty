@@ -20,7 +20,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="border-b-2 border-slate-300 p-4">
+        <header className="border-b-2 border-slate-300 p-4 bg-slate-200">
           <div className="text-right">
             { session?.user &&
               <span className="p-2">{ session.user.email }</span>

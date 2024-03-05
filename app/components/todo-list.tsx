@@ -42,10 +42,9 @@ const TodoList : React.FC<{user_id: string}> = ({user_id}) => {
     deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
   }
 
-  return <ul className="my-8 list-disc">
+  return <ul className="my-8 w-full">
     { todos.map((t, i) => <TodoItem key={i} todo={t} remove={removeTodo} />) }
     <TodoAdd user_id={user_id} addTodo={insertTodo} />
-    <li>{user_id}</li>
   </ul>
 }
 export default TodoList;
