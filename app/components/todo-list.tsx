@@ -18,6 +18,14 @@ const addTodo = async (todo: NewTodo) : Promise<Todo> => {
   return await data.json();
 }
 
+const deleteTodo = async (todo_id: Number) : Promise<Todo> => {
+  const data = await fetch('/api/todo', {
+    method: 'DELETE',
+    body: JSON.stringify({todo_id}),
+  });
+  return await data.json();
+}
+
 const TodoList : React.FC<{user_id: string}> = ({user_id}) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   
@@ -29,8 +37,13 @@ const TodoList : React.FC<{user_id: string}> = ({user_id}) => {
     addTodo({ task, user_id, done: false, orderno: null}).then(newTodo => setTodos(old => [...old, newTodo]));
   }
 
+  const removeTodo = (id: Number) => {
+    console.log('removing todo item: ', id);
+    deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
+  }
+
   return <ul className="my-8 list-disc">
-    { todos.map((t, i) => <TodoItem key={i} todo={t} />) }
+    { todos.map((t, i) => <TodoItem key={i} todo={t} remove={removeTodo} />) }
     <TodoAdd user_id={user_id} addTodo={insertTodo} />
     <li>{user_id}</li>
   </ul>

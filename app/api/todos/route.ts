@@ -1,4 +1,4 @@
-import { Todo } from "@/app/components/todo-item";
+import { Todo } from "@/lib/db";
 import { auth } from "@/auth";
 import { allTodos, userTodos } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";

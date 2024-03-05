@@ -17,7 +17,7 @@ export default async function Home() {
       <div className="z-10 w-full  text-sm lg:flex">
         <h1 className="text-2xl">Practice app</h1>
         <p>Paragraph 1 here</p>
-
+        
         <h2>User Todos</h2>
         <TodoList user_id={user_id} />
       </div>
@@ -25,9 +25,7 @@ export default async function Home() {
   );
 }
 
-/*
-async function getServerSideProps() {
+/*async function getServerSideProps() {
   const todos = await allTodos();
   return todos;
-}
-*/
+}*/

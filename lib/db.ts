@@ -28,6 +28,12 @@ export async function addTodo(todo: NewTodo) {
     .executeTakeFirstOrThrow();
 }
 
+export async function deleteTodo(id: Number) {
+  return db.deleteFrom('todo')
+    .where('todo_id', '=', id)
+    .execute();
+}
+
 export async function setTodoDone(todo_id: Number, done: boolean) {
   return db.updateTable('todo')
     .set({done})
