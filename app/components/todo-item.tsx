@@ -1,24 +1,17 @@
 'use client';
-import { setTodoDone } from "@/lib/db";
+import { Todo, setTodoDone } from "@/lib/db";
 import { useState } from "react";
 
 interface ITodo {
-  todo: {
-    todo_id: Number;
-    user_id: string;
-    orderno: number;
-    task: string;
-    done: boolean;
-  }
+  todo: Todo
 }
 
 const TodoItem: React.FC<ITodo> = ({todo}) => {
   const [t, setT] = useState(todo);
   
   const toggleDone = () => {
-    //setTodoDone(t.todo_id, !t.done);
     fetch('/api/todo', {
-      method: 'POST',
+      method: 'PATCH',
       
       body: JSON.stringify( t )
     });
