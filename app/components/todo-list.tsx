@@ -26,12 +26,12 @@ const deleteTodo = async (todo_id: Number) : Promise<Todo> => {
   return await data.json();
 }
 
-const TodoList : React.FC<{user_id: string}> = ({user_id}) => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+const TodoList : React.FC<{user_id: string, list: Todo[]}> = ({user_id, list}) => {
+  const [todos, setTodos] = useState<Todo[]>(list);
   
-  useEffect(() => {
-    getTodos().then(list => setTodos(list));
-  }, []);
+  // useEffect(() => {
+  //   getTodos().then(list => setTodos(list));
+  // }, []);
 
   const insertTodo = (task: string) => {
     addTodo({ task, user_id, done: false, orderno: null}).then(newTodo => setTodos(old => [...old, newTodo]));
