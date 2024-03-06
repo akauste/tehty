@@ -22,8 +22,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="border-b border-green-200 p-4 bg-green-100 flex flex-row">
-          <h1 className="text-green-800 font-bold text-2xl flex-grow">Practice app</h1>
+        <header className="text-gray-900 dark:text-gray-200 border-b border-green-200 dark:border-green-700 p-4 bg-green-100 dark:bg-green-900 flex flex-row">
+          <h1 className="text-green-800 font-bold text-2xl flex-grow dark:text-green-300">Practice app</h1>
  
           <div className="">
             { session?.user &&

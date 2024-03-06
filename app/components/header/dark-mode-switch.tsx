@@ -26,18 +26,20 @@ const DarkModeSwitch = () => {
 
   const darkMode = () => {
     setDarkMode(true);
+    document.documentElement.classList.add('dark')
     document.documentElement.style.setProperty('color-scheme', 'dark');
   }
 
   const lightMode = () => {
     setDarkMode(false);
+    document.documentElement.classList.remove('dark');
     document.documentElement.style.setProperty('color-scheme', 'light');
   }
 
-  return <button className="bg-gray-900 p-1 rounded-lg text-xs">
+  return <button className="bg-gray-400 dark:bg-gray-900 p-1 rounded-lg text-xs">
     { isDarkMode ? 
-      <LightMode htmlColor="yellow" onClick={lightMode} /> :
-      <DarkMode htmlColor="yellow" onClick={darkMode} /> }
+      <DarkMode htmlColor="yellow" onClick={lightMode} /> :
+      <LightMode htmlColor="yellow" onClick={darkMode} /> }
   </button>
 }
 export default DarkModeSwitch;
