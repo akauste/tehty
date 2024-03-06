@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default async function Info() {
   return <>
     <h1>Info page</h1>
@@ -9,6 +11,7 @@ export default async function Info() {
         <button className="w-24 h-12 bg-blue-500 text-slate-100 animate-spin">Spin</button>
         <button className="w-24 h-12 bg-blue-500 text-slate-100 animate-ping">Ping</button>
       </div>
+      <p><Link href="/info/sub">Sub-page</Link></p>
     </section>
   </>
 }
