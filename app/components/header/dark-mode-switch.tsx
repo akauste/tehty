@@ -3,7 +3,7 @@ import { DarkMode, LightMode } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 const DarkModeSwitch = () => {
-  const [mode, setMode] = useState<'dark' | 'light'>('light');
+  const [mode, setMode] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -13,8 +13,9 @@ const DarkModeSwitch = () => {
     };
 
     darkModeMediaQuery.addEventListener('change', handleDarkModeChange);
-    console.log('Dark mode setting: ', darkModeMediaQuery.matches);
+
     if(darkModeMediaQuery.matches) {
+      document.documentElement.style.setProperty('color-scheme', 'dark');
       setMode('dark');
     }
 
