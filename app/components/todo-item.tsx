@@ -1,6 +1,7 @@
 'use client';
 import { Todo, setTodoDone } from "@/lib/db";
 import { useState } from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ITodo {
   todo: Todo;
@@ -26,7 +27,9 @@ const TodoItem: React.FC<ITodo> = ({todo, remove}) => {
   return <li className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' } flex flex-row w-full space-between my-2`}>
               <input className="flex" type="checkbox" checked={t.done} onChange={(e) => toggleDone()} />
               <span className="mx-2 grow">{ todo.task }</span>
-              <button onClick={removeThis} className="mx p-1 border border-gray-700 rounded-sm text-xs bg-gray-200 text-gray-700 hover:text-gray-900 text-right">Remove</button>
+              <button onClick={removeThis} aria-label="Remove" 
+              className="mx p-1 border border-gray-700 rounded-sm text-xs bg-gray-200 text-gray-700 hover:text-gray-900 text-right"
+                ><DeleteIcon /></button>
   </li>;
 };
 export default TodoItem;

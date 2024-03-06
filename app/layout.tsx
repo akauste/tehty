@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { auth } from '../auth';
+import { DarkMode, LightMode, Logout } from "@mui/icons-material";
+import DarkModeSwitch from "./components/header/dark-mode-switch";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +25,13 @@ export default async function RootLayout({
         <header className="border-b border-green-200 p-4 bg-green-100 flex flex-row">
           <h1 className="text-green-800 font-bold text-2xl flex-grow">Practice app</h1>
  
-          <div className="text-right">
+          <div className="">
             { session?.user &&
               <span className="p-2">{ session.user.email }</span>
             }
-            <a href="/api/auth/signout" className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white">Sign out</a>
+            <a href="/api/auth/signout" className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white text-xs">
+                <Logout /> Sign out</a>
+            <DarkModeSwitch />
           </div>
         </header>
         {children}
