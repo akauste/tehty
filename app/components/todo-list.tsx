@@ -2,7 +2,9 @@
 import { NewTodo, Todo } from "@/lib/db";
 import TodoItem from "./todo-item";
 import TodoAdd from "./todo-add";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { DndProvider, useDrop } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const getTodos = async () : Promise<Todo[]> => {
   const data = await fetch('/api/todos');
@@ -42,9 +44,32 @@ const TodoList : React.FC<{user_id: string, list: Todo[]}> = ({user_id, list}) =
     deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
   }
 
-  return <ul className="my-8 w-full">
-    { todos.map((t, i) => <TodoItem key={i} todo={t} remove={removeTodo} />) }
-    <TodoAdd user_id={user_id} addTodo={insertTodo} />
-  </ul>
+  const findTodo = useCallback((id: string) => {
+      const todo = todos.filter((t) => `${t.todo_id}` === id)[0]
+      return {
+        todo,
+        index: todos.indexOf(todo),
+      }
+    },
+    [todos]);
+
+  const moveTodo = useCallback((id: string, atIndex: number) => {
+      const { todo, index } = findTodo(id);
+      console.log('Dropped:', index, atIndex, todo);
+      setTodos(old => {
+        const list = [...old];
+        list.splice(index, 1);
+        list.splice(atIndex, 0, todo);
+        return list;
+      });
+    },
+    [findTodo, setTodos]);
+
+  const [, drop] = useDrop(() => ({ accept: 'todo' }))
+
+  return <ul className="my-8 w-full" ref={drop}>
+      { todos.map((t, i) => <TodoItem key={i} todo={t} remove={removeTodo} moveTodo={moveTodo} findTodo={findTodo} />) }
+      { <TodoAdd user_id={user_id} addTodo={insertTodo} /> }
+    </ul>
 }
 export default TodoList;

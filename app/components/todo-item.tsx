@@ -1,15 +1,22 @@
 'use client';
 import { Todo, setTodoDone } from "@/lib/db";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDrag, useDrop } from "react-dnd";
 
 interface ITodo {
   todo: Todo;
   remove: (id: Number) => void;
+  moveTodo: (id: string, to: number) => void;
+  findTodo: (id: string) => { index: number };
 }
 
-const TodoItem: React.FC<ITodo> = ({todo, remove}) => {
+const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo}) => {
   const [t, setT] = useState(todo);
+
+  useEffect(() => {
+    setT(todo);
+  }, [todo])
   
   const toggleDone = () => {
     fetch('/api/todo', {
@@ -24,7 +31,40 @@ const TodoItem: React.FC<ITodo> = ({todo, remove}) => {
     remove(todo.todo_id)
   }
 
-  return <li className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' } flex flex-row w-full space-between my-2`}>
+  const originalIndex = findTodo(todo.todo_id.toString()).index;
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: 'todo',
+      item: { id: todo.todo_id.toString(), originalIndex },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+      end: (item, monitor) => {
+        const { id: droppedId, originalIndex } = item;
+        console.log(droppedId, originalIndex);
+        const didDrop = monitor.didDrop()
+        if (!didDrop) {
+          moveTodo(droppedId, originalIndex)
+        }
+      },
+    }),
+    [originalIndex, moveTodo],
+  )
+
+  const [, drop] = useDrop(
+    () => ({
+      accept: 'todo',
+      hover({ id: draggedId }: Todo & {id: string}) {
+        if (draggedId !== todo.todo_id.toString()) {
+          const { index: overIndex } = findTodo(todo.todo_id.toString())
+          moveTodo(draggedId.toString(), overIndex)
+        }
+      },
+    }),
+    [findTodo, moveTodo],
+  )
+
+  return <li ref={(node) => drag(drop(node))} className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' } flex flex-row w-full space-between my-2`}>
               <input className="flex" type="checkbox" checked={t.done} onChange={(e) => toggleDone()} />
               <span className="mx-2 grow">{ todo.task }</span>
               <button onClick={removeThis} aria-label="Remove" 

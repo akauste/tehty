@@ -1,7 +1,7 @@
 import { Todo, allTodos, setTodoDone, userTodos } from "@/lib/db";
 import Image from "next/image";
 import { auth } from '../auth';
-import TodoList from "./components/todo-list";
+import Todoer from "./components/Todoer";
 
 export default async function Home() {
   const session = await auth();
@@ -17,7 +17,7 @@ export default async function Home() {
       <p>Paragraph 1 here</p>
       
       <h2>User Todos</h2>
-      <TodoList user_id={user_id} list={todos} />
+      <Todoer user_id={user_id} todos={todos} />
     </>
   );
 }
