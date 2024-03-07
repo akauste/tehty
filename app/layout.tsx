@@ -23,8 +23,8 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <header className="text-gray-900 dark:text-gray-200 border-b border-green-200 dark:border-green-700 p-2 bg-green-100 dark:bg-green-900 flex flex-row">
+      <body className={`${inter.className} bg-gradient-to-b from-gray-200 dark:from-gray-700 to-gray-50 dark:to-gray-900`}>
+        <header className="text-gray-900 dark:text-gray-200 border-b border-green-200 dark:border-green-700 p-2 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 flex flex-row">
           <h1 className="text-green-800 font-bold text-2xl dark:text-green-300 mr-10">Practice app</h1>
 
           <HeaderMainMenu />
@@ -39,7 +39,7 @@ export default async function RootLayout({
           </div>
         </header>
         <main className="flex min-h-screen max-w-[800px] flex-col items-center justify-between py-4 mx-auto">
-          <div className="z-10 w-full text-sm p-4 bg-white shadow-sm shadow-gray-400">
+          <div className="z-10 w-full text-sm p-4 bg-white dark:bg-gray-800 shadow-sm shadow-gray-400 dark:shadow-gray-950">
             {children}
           </div>
         </main>
