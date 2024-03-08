@@ -32,7 +32,7 @@ const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo}) => {
   }
 
   const originalIndex = findTodo(todo.todo_id.toString()).index;
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: 'todo',
       item: { id: todo.todo_id.toString(), originalIndex },
@@ -64,12 +64,14 @@ const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo}) => {
     [findTodo, moveTodo],
   )
 
-  return <li ref={(node) => drag(drop(node))} className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' } flex flex-row w-full space-between my-2`}>
-              <input className="flex" type="checkbox" checked={t.done} onChange={(e) => toggleDone()} />
-              <span className="mx-2 grow">{ todo.task }</span>
-              <button onClick={removeThis} aria-label="Remove" 
-              className="mx p-1 border border-gray-700 rounded-sm text-xs bg-gray-200 text-gray-700 hover:text-gray-900 text-right"
-                ><DeleteIcon /></button>
+  return <li ref={(node) => drag(drop(node))} 
+    className={`flex flex-row w-full space-between my-2`}>
+      <input className="flex m-2" type="checkbox" checked={t.done} onChange={(e) => toggleDone()} />
+      <span className={`${ t.done ? 'line-through text-gray-400' : 'text-bold' } mx-2 grow`}>{ todo.task }</span>
+      <button onClick={removeThis} aria-label="Remove" 
+          className="mx p-1 border border-gray-700 rounded-sm text-xs bg-gray-200 text-gray-700 hover:text-gray-900 text-right">
+          <DeleteIcon />
+      </button>
   </li>;
 };
 export default TodoItem;
