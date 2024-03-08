@@ -9,9 +9,10 @@ interface ITodo {
   remove: (id: Number) => void;
   moveTodo: (id: string, to: number) => void;
   findTodo: (id: string) => { index: number };
+  onDrop: () => void;
 }
 
-const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo}) => {
+const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo, onDrop}) => {
   const [t, setT] = useState(todo);
 
   useEffect(() => {
@@ -41,10 +42,13 @@ const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo}) => {
       }),
       end: (item, monitor) => {
         const { id: droppedId, originalIndex } = item;
-        console.log(droppedId, originalIndex);
+        //console.log(droppedId, originalIndex);
         const didDrop = monitor.didDrop()
         if (!didDrop) {
           moveTodo(droppedId, originalIndex)
+        }
+        else {
+          onDrop();
         }
       },
     }),
@@ -60,6 +64,9 @@ const TodoItem: React.FC<ITodo> = ({todo, remove, moveTodo, findTodo}) => {
           moveTodo(draggedId.toString(), overIndex)
         }
       },
+      // drop(item) {
+      //   console.log('DROP HAPPENED', item);
+      // }
     }),
     [findTodo, moveTodo],
   )

@@ -55,20 +55,31 @@ const TodoList : React.FC<{user_id: string, list: Todo[]}> = ({user_id, list}) =
 
   const moveTodo = useCallback((id: string, atIndex: number) => {
       const { todo, index } = findTodo(id);
-      console.log('Dropped:', index, atIndex, todo);
       setTodos(old => {
         const list = [...old];
         list.splice(index, 1);
         list.splice(atIndex, 0, todo);
+        //console.log(old.map(t => t.todo_id).join(',') + ' -> '+ list.map(t => t.todo_id).join(','), todo);
         return list;
       });
     },
     [findTodo, setTodos]);
 
-  const [, drop] = useDrop(() => ({ accept: 'todo' }))
+  const updateOrder = async () => {
+    const res = await fetch('/api/todos', {
+      method: 'POST',
+      body: JSON.stringify(
+        todos.map((t,index) => ({todo_id: t.todo_id, orderno: index}))
+      ),
+    });
+    const data = await res.json();
+    console.log('Updated: ', data);
+  }
+
+  const [, drop] = useDrop(() => ({ accept: 'todo' }));
 
   return <ul className="my-8 w-full" ref={drop}>
-      { todos.map((t, i) => <TodoItem key={i} todo={t} remove={removeTodo} moveTodo={moveTodo} findTodo={findTodo} />) }
+      { todos.map((t, i) => <TodoItem key={i} todo={t} remove={removeTodo} moveTodo={moveTodo} findTodo={findTodo} onDrop={updateOrder} />) }
       { <TodoAdd user_id={user_id} addTodo={insertTodo} /> }
     </ul>
 }
