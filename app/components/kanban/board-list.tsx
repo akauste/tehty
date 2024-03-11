@@ -37,6 +37,14 @@ export type Board = {
 
 const BoardList : React.FC<{user_id: string, list: Board[]}> = ({user_id, list}) => {
   const [boards, setBoards] = useState<Board[]>(list);
+
+  const updateBoard = (index: number, board: Board) => {
+    setBoards(old => {
+      const newBoards = old.map(b => ({...b}));
+      newBoards[index] = {...board};
+      return newBoards;
+    })
+  }
   
   // useEffect(() => {
   //   getTodos().then(list => setTodos(list));
@@ -86,7 +94,7 @@ const BoardList : React.FC<{user_id: string, list: Board[]}> = ({user_id, list})
   const [, drop] = useDrop(() => ({ accept: 'board' }));
 
   return <ul className="flex w-full min-h-100 space-x-4" ref={drop}>
-      { boards.map((b, i) => <BoardItem key={i} board={b} remove={() => {} /*removeTodo*/} moveBoard={moveBoard} findBoard={findBoard} onDrop={updateOrder} />) }
+      { boards.map((b, i) => <BoardItem key={i} board={b} update={(board) => updateBoard(i, board)} remove={() => {} /*removeTodo*/} moveBoard={moveBoard} findBoard={findBoard} onDrop={updateOrder} />) }
       {/* <TodoAdd user_id={user_id} addTodo={insertTodo} /> */}
     </ul>
 }

@@ -8,6 +8,7 @@ import { Edit, Add, EditTwoTone, Settings, DragHandle, DragHandleOutlined, DragH
 
 interface IBoard {
   board: Board;
+  update: (board: Board) => void;
   remove: (id: Number) => void;
   moveBoard: (id: string, to: number) => void;
   findBoard: (id: string) => { index: number };
@@ -27,12 +28,15 @@ const bgColors = [
   '#fb7185', // rose-400
 ];
 
-const BoardItem: React.FC<IBoard> = ({board, remove, moveBoard, findBoard, onDrop}) => {
-  const [b, setB] = useState(board);
+const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoard, onDrop}) => {
+  //const [b, setB] = useState(board);
+  const [boardEdit, setBoardEdit] = useState(false);
+  const toggleBoardEdit = () => setBoardEdit(v => !v);
+  const bgColor = board.backgroundColor;
 
-  useEffect(() => {
-    setB(board);
-  }, [board])
+  /*useEffect(() => {
+    update(board);
+  }, [board])*/
   
   // const toggleDone = () => {
   //   fetch('/api/todo', {
@@ -86,26 +90,22 @@ const BoardItem: React.FC<IBoard> = ({board, remove, moveBoard, findBoard, onDro
     [findBoard, moveBoard],
   )
 
-  const [boardEdit, setBoardEdit] = useState(false);
-  const toggleBoardEdit = () => setBoardEdit(v => !v);
-  const [bgColor, setBgColor] = useState(b.backgroundColor);
-
   return <li ref={(node) => drag(drop(node))} 
     className="bg-slate-200 dark:bg-slate-700 flex-grow h-96 border border-slate-500 shadow-sm shadow-slate-500">
       <header className="flex border-b border-slate-400 p-1" style={{ 
           backgroundImage: `linear-gradient(to right, ${bgColor} 40%, transparent)` 
         }}>
-        <h2 className={`flex-grow flex-shrink`}>{ b.name }</h2>
+        <h2 className={`flex-grow flex-shrink`}>{ board.name }</h2>
         <button onClick={toggleBoardEdit} className="hover:text-sky-800 dark:hover:text-sky-200"><Edit fontSize="small" /><span className="sr-only">edit</span></button>
         { boardEdit && 
           <div className="absolute w-44 bg-slate-100 dark:bg-slate-700 p-2 flex flex-col space-y-1 shadow-sm shadow-slate-800">
             <label>Name</label>
-            <input type="text" value={b.name} onChange={(e) => setB(o => ({...o, name: e.target.value}))} className="border border-slate-500 rounded" /> 
+            <input type="text" value={board.name} onChange={(e) => update({...board, name: e.target.value})} className="border border-slate-500 rounded" /> 
             <label>Color</label>
             <div className="flex flex-row gap-1">
               { bgColors.map(color => (
                 <button key={color} className="w-4 h-4 hover:opacity-50"
-                  onClick={() => setBgColor(color)}
+                  onClick={() => update({...board, backgroundColor: color})}
                   style={{
                     backgroundColor: color,
                     boxShadow: (color == bgColor ? `1px -1px 2px black` : ''),
