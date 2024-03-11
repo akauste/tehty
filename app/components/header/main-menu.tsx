@@ -9,7 +9,7 @@ export default function HeaderMainMenu() {
       <Link  href="/" className={`${path == '/' && 'font-bold'} p-2 mr-6`}>Home</Link>
     </li>
     <li>
-      <Link  href="/kanban" className={`${path == '/' && 'font-bold'} p-2 mr-6`}>Kanban</Link>
+      <Link  href="/kanban" className={`${path == '/kanban' && 'font-bold'} p-2 mr-6`}>Kanban</Link>
     </li>
     <li>
       <Link href="/info" className={`${path.match('/info') && 'font-bold'} p-2 mr-6`}>Info</Link>

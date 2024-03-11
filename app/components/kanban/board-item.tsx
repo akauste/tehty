@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDrag, useDrop } from "react-dnd";
 import { Board, Task } from "./board-list";
-import { Edit, Add, EditTwoTone, Settings, DragHandle, DragHandleOutlined, DragHandleTwoTone } from '@mui/icons-material';
+import { Edit, Add, EditTwoTone, Settings, DragHandle, DragHandleOutlined, DragHandleTwoTone, Details, DetailsTwoTone, OpenInFull, Assignment } from '@mui/icons-material';
 import BoardEdit from "./board-edit";
+import TaskList from "../task/task-list";
 
 interface IBoard {
   board: Board;
@@ -92,7 +93,7 @@ const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoar
   )
 
   return <li ref={(node) => drag(drop(node))} 
-    className="bg-slate-200 dark:bg-slate-700 flex-1 flex-grow h-96 border border-slate-500 shadow-sm shadow-slate-500 space-y-2">
+    className="bg-slate-200 dark:bg-slate-700 flex-1 flex-grow min-h-96 border border-slate-500 shadow-sm shadow-slate-500 space-y-2">
       <header className="flex border-b border-slate-400 p-1" style={{ 
           backgroundImage: `linear-gradient(to right, ${bgColor} 40%, transparent)` 
         }}>
@@ -100,16 +101,7 @@ const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoar
         <button onClick={toggleBoardEdit} className="hover:text-sky-800 dark:hover:text-sky-200"><Edit fontSize="small" /><span className="sr-only">edit</span></button>
         { boardEdit && <BoardEdit board={board} update={update} close={() => setBoardEdit(false)} /> }
       </header>
-      <ul className="space-y-2">
-        {
-          board.tasks.map(t => <li key={t.task_id.toString()} className="bg-slate-300">
-            <span className="bg-slate-200 text-xs float-right">due date</span>
-            <h3 className="px-1 bold" style={{backgroundColor: t.backgroundColor}}>{ t.name }</h3>
-            { t.description.length > 0 && <p className="p-1 text-xs line-clamp-3">{ t.description }</p> }
-            { t.tags.length > 0 && <p className="text-sky-600 p-1 text-xs">{ t.tags.join(', ') }</p>}
-          </li>)
-        }
-      </ul>
+      <TaskList user_id={'testuser'} list={board.tasks} />
       <button className="mt-2 hover:text-sky-800 dark:hover:text-sky-200"><Add fontSize="small" /> Add</button>
   </li>;
 };

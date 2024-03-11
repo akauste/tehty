@@ -81,7 +81,7 @@ const BoardList : React.FC<{user_id: string, list: Board[]}> = ({user_id, list})
   const moveBoard = useCallback((id: string, atIndex: number) => {
       const { board, index } = findBoard(id);
       setBoards(old => {
-        const list = [...old];
+        const list = old.map(b => ({...b, tasks: b.tasks.map(t => ({...t}))})) //[...old];
         list.splice(index, 1);
         list.splice(atIndex, 0, board);
         //console.log(old.map(t => t.todo_id).join(',') + ' -> '+ list.map(t => t.todo_id).join(','), todo);
