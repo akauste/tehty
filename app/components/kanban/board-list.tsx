@@ -29,10 +29,20 @@ import BoardItem from "./board-item";
 //   return await data.json();
 // }
 
+export type Task = {
+  task_id: Number;
+  category: Number;
+  name: string;
+  description: string;
+  backgroundColor: string;
+  tags: string[]
+}
+
 export type Board = {
   board_id: Number;
   name: string;
   backgroundColor: string;
+  tasks: Task[];
 }
 
 const BoardList : React.FC<{user_id: string, list: Board[]}> = ({user_id, list}) => {

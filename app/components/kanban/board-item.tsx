@@ -3,8 +3,9 @@ import { Todo, setTodoDone } from "@/lib/db";
 import { useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDrag, useDrop } from "react-dnd";
-import { Board } from "./board-list";
+import { Board, Task } from "./board-list";
 import { Edit, Add, EditTwoTone, Settings, DragHandle, DragHandleOutlined, DragHandleTwoTone } from '@mui/icons-material';
+import BoardEdit from "./board-edit";
 
 interface IBoard {
   board: Board;
@@ -15,7 +16,7 @@ interface IBoard {
   onDrop: () => void;
 }
 
-const bgColors = [
+export const bgColors = [
   '#94a3b8', // slate-400
   '#f87171', // red-400
   '#fbbf24', // amber-400
@@ -91,49 +92,23 @@ const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoar
   )
 
   return <li ref={(node) => drag(drop(node))} 
-    className="bg-slate-200 dark:bg-slate-700 flex-grow h-96 border border-slate-500 shadow-sm shadow-slate-500">
+    className="bg-slate-200 dark:bg-slate-700 flex-1 flex-grow h-96 border border-slate-500 shadow-sm shadow-slate-500 space-y-2">
       <header className="flex border-b border-slate-400 p-1" style={{ 
           backgroundImage: `linear-gradient(to right, ${bgColor} 40%, transparent)` 
         }}>
         <h2 className={`flex-grow flex-shrink`}>{ board.name }</h2>
         <button onClick={toggleBoardEdit} className="hover:text-sky-800 dark:hover:text-sky-200"><Edit fontSize="small" /><span className="sr-only">edit</span></button>
-        { boardEdit && 
-          <div className="absolute w-44 bg-slate-100 dark:bg-slate-700 p-2 flex flex-col space-y-1 shadow-sm shadow-slate-800">
-            <label>Name</label>
-            <input type="text" value={board.name} onChange={(e) => update({...board, name: e.target.value})} className="border border-slate-500 rounded" /> 
-            <label>Color</label>
-            <div className="flex flex-row gap-1">
-              { bgColors.map(color => (
-                <button key={color} className="w-4 h-4 hover:opacity-50"
-                  onClick={() => update({...board, backgroundColor: color})}
-                  style={{
-                    backgroundColor: color,
-                    boxShadow: (color == bgColor ? `1px -1px 2px black` : ''),
-                }}></button>
-              )) }
-            </div>
-            <select className="border border-slate-500 rounded">
-              <option>Default</option>
-              <option className="bg-sky-400">Blue</option>
-            </select> 
-            <label>
-              <input type="checkbox" />
-              Show</label>
-            <button className="border border-slate-500 rounded p-1" onClick={toggleBoardEdit}>Close</button>
-          </div>
-        }
+        { boardEdit && <BoardEdit board={board} update={update} close={() => setBoardEdit(false)} /> }
       </header>
       <ul className="space-y-2">
-        <li className="bg-slate-400">
-          Item 1
-          <p className="text-xs line-clamp-3">The longer description of this task, that might be really really long. If you type too much then we clamp it to a shorter form.</p>
-        </li>
-        <li className="bg-red-400 border-b border-red-600 shadow-sm shadow-red-700">Item 2</li>
-        <li className="bg-slate-400 border-green-600 shadow-sm shadow-green-700">
-          <h3 className="px-1 bg-green-400 bold">Item 3</h3>
-          <p className="p-1 text-xs text-green-900 line-clamp-3">Some other info here</p>
-        </li>
-        <li className="bg-slate-400">Item 4</li>
+        {
+          board.tasks.map(t => <li key={t.task_id.toString()} className="bg-slate-300">
+            <span className="bg-slate-200 text-xs float-right">due date</span>
+            <h3 className="px-1 bold" style={{backgroundColor: t.backgroundColor}}>{ t.name }</h3>
+            { t.description.length > 0 && <p className="p-1 text-xs line-clamp-3">{ t.description }</p> }
+            { t.tags.length > 0 && <p className="text-sky-600 p-1 text-xs">{ t.tags.join(', ') }</p>}
+          </li>)
+        }
       </ul>
       <button className="mt-2 hover:text-sky-800 dark:hover:text-sky-200"><Add fontSize="small" /> Add</button>
   </li>;
