@@ -1,6 +1,6 @@
-'use client';
+"use client";
 import { useDrag, useDrop } from "react-dnd";
-import { Task } from "../kanban/board-list";
+import { Task } from "@/lib/db";
 import { Assignment } from "@mui/icons-material";
 
 interface TasksProps {
@@ -12,73 +12,137 @@ interface TasksProps {
   onDrop: () => void;
 }
 
-const TaskItem: React.FC<TasksProps> = ({task, remove, insertAt, move, find, onDrop}) => {
+const TaskItem: React.FC<TasksProps> = ({
+  task,
+  remove,
+  insertAt,
+  move,
+  find,
+  onDrop,
+}) => {
   const originalIndex = find(task.task_id).index;
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
-      type: 'task',
-      item: { id: task.task_id, originalIndex, task: {...task}, removeOld: remove },
+      type: "task",
+      item: {
+        id: task.task_id,
+        originalIndex,
+        task: { ...task },
+        removeOld: remove,
+      },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
-        console.log('end handler!!!', task.name, item.task.name, task.board_id, item.task.board_id);
+        console.log(
+          "end handler!!!",
+          task.name,
+          item.task.name,
+          task.board_id,
+          item.task.board_id
+        );
         const { id: droppedId, originalIndex } = item;
-        const didDrop = monitor.didDrop()
+        const didDrop = monitor.didDrop();
         if (!didDrop) {
-          console.log('No drop', monitor);
-          move(droppedId, originalIndex)
-        }
-        else {
+          console.log("No drop", monitor);
+          move(droppedId, originalIndex);
+        } else {
           onDrop();
         }
       },
     }),
-    [originalIndex, move],
-  )
+    [originalIndex, move]
+  );
 
   const [, drop] = useDrop(
     () => ({
-      accept: 'task',
-      hover({ id: draggedId, task: sourceTask }: {id: Number, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
-        if(task.board_id == sourceTask.board_id) {
+      accept: "task",
+      hover({
+        id: draggedId,
+        task: sourceTask,
+      }: {
+        id: Number;
+        originalIndex: number;
+        task: Task;
+        removeOld: (id: Number) => void;
+      }) {
+        if (task.board_id == sourceTask.board_id) {
           if (draggedId !== task.task_id) {
-            const { index: overIndex } = find(task.task_id)
-            move(draggedId, overIndex)
+            const { index: overIndex } = find(task.task_id);
+            move(draggedId, overIndex);
           }
-        }
-        else {
-          console.log('HOVER OVER OTHER CATEGORY src/tgt:', sourceTask.board_id, task.board_id);
+        } else {
+          console.log(
+            "HOVER OVER OTHER CATEGORY src/tgt:",
+            sourceTask.board_id,
+            task.board_id
+          );
         }
       },
-      drop({id: draggedId, task: sourceTask, removeOld}: {id: Number, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
-        if(task.board_id != sourceTask.board_id) {
-          console.log('NEWDROP HANDLER', task.board_id);
-          const {index} = find(task.task_id);
-          insertAt({...sourceTask, board_id: task.board_id}, index);
+      drop({
+        id: draggedId,
+        task: sourceTask,
+        removeOld,
+      }: {
+        id: Number;
+        originalIndex: number;
+        task: Task;
+        removeOld: (id: Number) => void;
+      }) {
+        if (task.board_id != sourceTask.board_id) {
+          console.log("NEWDROP HANDLER", task.board_id);
+          const { index } = find(task.task_id);
+          insertAt({ ...sourceTask, board_id: task.board_id }, index);
           removeOld(sourceTask.task_id);
         }
-      }
+      },
     }),
-    [find, move],
-  )
+    [find, move]
+  );
 
-  return <li ref={(node) => drag(drop(node))} className="border-b border-slate-600 hover:border-red-800 hover:opacity-70">
-  <header className="mt-3 bg-slate-400" style={{backgroundColor: task.backgroundColor}}>
-    <div className="text-xs">&nbsp;
-      <div className="bg-slate-200 float-right border border-slate-500 mt-[-6px] flex gap-2 opacity-80">
-        <span>due date</span>
-        <Assignment fontSize="small" className="float-right hover:text-sky-800" />
-      </div>
-    </div>
-    <h3 className="px-1 bold" style={{backgroundColor: task.backgroundColor}}>
-      { task.name }
-    </h3>
-  </header>
-  <section className="bg-slate-300">
-    { task.description.length > 0 && <p className="p-1 text-xs line-clamp-3">{ task.description }</p> }
-    { task.tags.length > 0 && <p className="text-sky-600 p-1 text-xs">{ task.tags.join(', ') }</p>}
-  </section>
-</li>;
+  const now = new Date();
+  const isLate = task.dueDate && task.dueDate < now;
+  return (
+    <li
+      ref={(node) => drag(drop(node))}
+      className="border-b border-slate-600 hover:border-red-800 hover:opacity-70"
+    >
+      <header
+        className="mt-3 bg-slate-400"
+        style={{ backgroundColor: task.backgroundColor }}
+      >
+        <div className="text-xs">
+          &nbsp;
+          <div
+            className={`${
+              isLate ? "bg-red-200 text-red-800" : "bg-slate-200"
+            }  float-right border border-slate-500 mt-[-6px] flex gap-2 opacity-80`}
+          >
+            {task.dueDate && (
+              <span>{task.dueDate.toLocaleDateString("fi")}</span>
+            )}
+            <Assignment
+              fontSize="small"
+              className="float-right hover:text-sky-800"
+            />
+          </div>
+        </div>
+        <h3
+          className="px-1 bold"
+          style={{ backgroundColor: task.backgroundColor }}
+        >
+          {task.name}
+        </h3>
+      </header>
+      <section className="bg-slate-300">
+        {task.description.length > 0 && (
+          <p className="p-1 text-xs line-clamp-3">{task.description}</p>
+        )}
+        {task.tags.length > 0 && (
+          <p className="text-sky-600 p-1 text-xs">{task.tags.join(", ")}</p>
+        )}
+      </section>
+    </li>
+  );
 };
 export default TaskItem;

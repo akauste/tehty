@@ -93,7 +93,7 @@ export interface TaskTable {
   name: string;
   backgroundColor: string;
   description: string;
-  dueDate: Date;
+  dueDate: Date | null;
   done: boolean;
 }
 
