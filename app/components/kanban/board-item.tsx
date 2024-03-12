@@ -1,20 +1,22 @@
 'use client';
 import { Todo, setTodoDone } from "@/lib/db";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDrag, useDrop } from "react-dnd";
 import { Board, Task } from "./board-list";
 import { Edit, Add, EditTwoTone, Settings, DragHandle, DragHandleOutlined, DragHandleTwoTone, Details, DetailsTwoTone, OpenInFull, Assignment } from '@mui/icons-material';
 import BoardEdit from "./board-edit";
 import TaskList from "../task/task-list";
+import { KanbanActions } from "./kanban";
 
 interface IBoard {
   board: Board;
   update: (board: Board) => void;
   remove: (id: Number) => void;
-  moveBoard: (id: string, to: number) => void;
-  findBoard: (id: string) => { index: number };
+  moveBoard: (id: Number, to: number) => void;
+  findBoard: (id: Number) => { index: number };
   onDrop: () => void;
+  dispatch: Dispatch<KanbanActions>;
 }
 
 export const bgColors = [
@@ -30,7 +32,7 @@ export const bgColors = [
   '#fb7185', // rose-400
 ];
 
-const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoard, onDrop}) => {
+const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoard, onDrop, dispatch}) => {
   //const [b, setB] = useState(board);
   const [boardEdit, setBoardEdit] = useState(false);
   const toggleBoardEdit = () => setBoardEdit(v => !v);
@@ -53,17 +55,16 @@ const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoar
   //   remove(todo.todo_id)
   // }
 
-  const originalIndex = findBoard(board.board_id.toString()).index;
+  const originalIndex = findBoard(board.board_id).index;
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: 'board',
-      item: { id: board.board_id.toString(), originalIndex },
+      item: { id: board.board_id, originalIndex },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
         const { id: droppedId, originalIndex } = item;
-        //console.log(droppedId, originalIndex);
         const didDrop = monitor.didDrop()
         if (!didDrop) {
           moveBoard(droppedId, originalIndex)
@@ -79,15 +80,12 @@ const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoar
   const [, drop] = useDrop(
     () => ({
       accept: 'board',
-      hover({ id: draggedId }: Board & {id: string}) {
-        if (draggedId !== board.board_id.toString()) {
-          const { index: overIndex } = findBoard(board.board_id.toString())
-          moveBoard(draggedId.toString(), overIndex)
+      hover({ id: draggedId }: Board & {id: Number}) {
+        if (draggedId !== board.board_id) {
+          const { index: overIndex } = findBoard(board.board_id)
+          moveBoard(draggedId, overIndex)
         }
       },
-      // drop(item) {
-      //   console.log('DROP HAPPENED', item);
-      // }
     }),
     [findBoard, moveBoard],
   )
@@ -98,10 +96,13 @@ const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoar
           backgroundImage: `linear-gradient(to right, ${bgColor} 40%, transparent)` 
         }}>
         <h2 className={`flex-grow flex-shrink`}>{ board.name }</h2>
-        <button onClick={toggleBoardEdit} className="hover:text-sky-800 dark:hover:text-sky-200"><Edit fontSize="small" /><span className="sr-only">edit</span></button>
+        <button onClick={toggleBoardEdit} className="hover:text-sky-800 dark:hover:text-sky-200">
+          <Edit fontSize="small" />
+          <span className="sr-only">edit</span>
+        </button>
         { boardEdit && <BoardEdit board={board} update={update} close={() => setBoardEdit(false)} /> }
       </header>
-      <TaskList user_id={'testuser'} list={board.tasks} />
+      <TaskList user_id={'testuser'} board_id={board.board_id} list={board.tasks} dispatch={dispatch} />
       <button className="mt-2 hover:text-sky-800 dark:hover:text-sky-200"><Add fontSize="small" /> Add</button>
   </li>;
 };

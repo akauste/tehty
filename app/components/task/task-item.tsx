@@ -9,9 +9,9 @@ import { Assignment } from "@mui/icons-material";
 interface TasksProps {
   task: Task;
   remove: (id: Number) => void;
-  move: (id: string, to: number) => void;
+  move: (id: Number, to: number) => void;
   insertAt: (task: Task, atIndex: number) => void;
-  find: (id: string) => { index: number };
+  find: (id: Number) => { index: number };
   onDrop: () => void;
 }
 
@@ -35,11 +35,11 @@ const TaskItem: React.FC<TasksProps> = ({task, remove, insertAt, move, find, onD
   //   remove(todo.todo_id)
   // }
 
-  const originalIndex = find(task.task_id.toString()).index;
+  const originalIndex = find(task.task_id).index;
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: 'task',
-      item: { id: task.task_id.toString(), originalIndex, task: {...task}, removeOld: remove },
+      item: { id: task.task_id, originalIndex, task: {...task}, removeOld: remove },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
@@ -63,21 +63,21 @@ const TaskItem: React.FC<TasksProps> = ({task, remove, insertAt, move, find, onD
   const [, drop] = useDrop(
     () => ({
       accept: 'task',
-      hover({ id: draggedId, task: sourceTask }: Task & {id: string, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
+      hover({ id: draggedId, task: sourceTask }: {id: Number, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
         if(task.category == sourceTask.category) {
-          if (draggedId !== task.task_id.toString()) {
-            const { index: overIndex } = find(task.task_id.toString())
-            move(draggedId.toString(), overIndex)
+          if (draggedId !== task.task_id) {
+            const { index: overIndex } = find(task.task_id)
+            move(draggedId, overIndex)
           }
         }
         else {
           console.log('HOVER OVER OTHER CATEGORY src/tgt:', sourceTask.category, task.category);
         }
       },
-      drop({id: draggedId, task: sourceTask, removeOld}: Task & {id: string, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
+      drop({id: draggedId, task: sourceTask, removeOld}: {id: Number, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
         if(task.category != sourceTask.category) {
           console.log('NEWDROP HANDLER', task.category);
-          const {index} = find(task.task_id.toString());
+          const {index} = find(task.task_id);
           insertAt({...sourceTask, category: task.category}, index);
           removeOld(sourceTask.task_id);
         }

@@ -66,8 +66,8 @@ const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<K
   //   deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
   // }
 
-  const findBoard = useCallback((id: string) => {
-      const board = boards.filter((b) => `${b.board_id}` === id)[0]
+  const findBoard = useCallback((id: Number) => {
+      const board = boards.filter((b) => b.board_id === id)[0]
       return {
         board,
         index: boards.indexOf(board),
@@ -75,9 +75,8 @@ const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<K
     },
     [boards]);
 
-  const moveBoard = useCallback((id: string, atIndex: number) => {
-      const { board, index } = findBoard(id);
-      dispatch({type: 'move-board', index, atIndex, board});
+  const moveBoard = useCallback((board_id: Number, atIndex: number) => {
+      dispatch({type: 'move-board', board_id, atIndex});
     },
     [findBoard]);
 
@@ -95,7 +94,17 @@ const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<K
   const [, drop] = useDrop(() => ({ accept: 'board' }));
 
   return <ul className="flex w-full min-h-100 space-x-4" ref={drop}>
-      { boards.map((b, i) => <BoardItem key={i} board={b} update={(board) => updateBoard(i, board)} remove={() => {} /*removeTodo*/} moveBoard={moveBoard} findBoard={findBoard} onDrop={updateOrder} />) }
+      { boards.map((b, i) => (
+        <BoardItem 
+          key={i} 
+          board={b} 
+          update={(board) => updateBoard(i, board)} 
+          remove={() => {} /*removeTodo*/} 
+          moveBoard={moveBoard} 
+          findBoard={findBoard} 
+          onDrop={updateOrder} 
+          dispatch={dispatch} 
+        />))}
       {/* <TodoAdd user_id={user_id} addTodo={insertTodo} /> */}
     </ul>
 }

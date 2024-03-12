@@ -1,22 +1,25 @@
 import { Assignment } from "@mui/icons-material"
 import { Task } from "../kanban/board-list"
 import TaskItem from "./task-item"
-import { useCallback, useEffect, useState } from "react"
+import { Dispatch, useCallback, useEffect, useState } from "react"
+import { KanbanActions } from "../kanban/kanban"
 
 interface TaskListProps {
   user_id: string
   list: Task[]
+  board_id: Number
+  dispatch: Dispatch<KanbanActions>
 }
 
-const TaskList = ({list}: TaskListProps) => {
-  const [tasks, setTasks] = useState(list);
+const TaskList = ({board_id, list, dispatch}: TaskListProps) => {
+  const tasks = list;
 
-  useEffect(() => {
-    setTasks(list);
-  }, [list]);
+  // useEffect(() => {
+  //   setTasks(list);
+  // }, [list]);
 
-  const find = useCallback((id: string) => {
-    const task = tasks.filter((t) => `${t.task_id}` === id)[0]
+  const find = useCallback((id: Number) => {
+    const task = tasks.filter((t) => t.task_id === id)[0]
     return {
       task,
       index: tasks.indexOf(task),
@@ -24,30 +27,31 @@ const TaskList = ({list}: TaskListProps) => {
   },
   [tasks]);
 
-const move = useCallback((id: string, atIndex: number) => {
+const move = useCallback((id: Number, atIndex: number) => {
     const { task, index } = find(id);
-    setTasks(old => {
-      const list = [...old];
-      if(index != undefined)
-        list.splice(index, 1);
-      list.splice(atIndex, 0, task);
-      //list.splice(atIndex, 0, task);
-      //console.log(old.map(t => t.todo_id).join(',') + ' -> '+ list.map(t => t.todo_id).join(','), todo);
-      return list;
-    });
+    dispatch({type: 'move-task', board_id: task.category, removeIndex: index, atIndex, task});
+    // setTasks(old => {
+    //   const list = [...old];
+    //   if(index != undefined)
+    //     list.splice(index, 1);
+    //   list.splice(atIndex, 0, task);
+    //   return list;
+    // });
   },
-  [find, setTasks]);
+  [find]);
 
 const insertAt = useCallback((newTask: Task, atIndex: number) => {
-  setTasks(old => {
-    const list = [...old];
-    list.splice(atIndex, 0, newTask);
-    return list;
-  });
+  dispatch({type: 'insert-task', board_id,  newTask, atIndex});
+  // setTasks(old => {
+  //   const list = [...old];
+  //   list.splice(atIndex, 0, newTask);
+  //   return list;
+  // });
 }, [find]);
 
-const remove = useCallback((id: Number) => {
-  setTasks(old => old.filter(t => t.task_id != id));
+const remove = useCallback((task_id: Number) => {
+  dispatch({type: 'remove-task', board_id, task_id});
+  //setTasks(old => old.filter(t => t.task_id != id));
 }, []);
 
 const updateOrder = async () => {

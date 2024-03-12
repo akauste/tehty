@@ -1,7 +1,7 @@
 'use client';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import BoardList, { Board } from "./board-list";
+import BoardList, { Board, Task } from "./board-list";
 import { Todo } from "@/lib/db";
 import { useReducer } from "react";
 import {produce} from "immer";
@@ -36,28 +36,80 @@ const boards = [
 
 type MoveBoardAction = {
   type: 'move-board'
-  index: number
+  board_id: Number
   atIndex: number
-  board: Board
 }
 type UpdateBoardAction = {
   type: 'update-board'
   index: number
   board: Board
 }
-export type KanbanActions = MoveBoardAction | UpdateBoardAction;
+type MoveTaskAction = {
+  type: 'move-task'
+  board_id: Number
+  removeIndex: number
+  atIndex: number
+  task: Task
+}
+type InsertTaskAction = {
+  type: 'insert-task'
+  board_id: Number
+  atIndex: number
+  newTask: Task
+}
+type RemoveTaskAction = {
+  type: 'remove-task'
+  board_id: Number
+  task_id: Number
+}
+type AppendTask = {
+  type: 'append-task'
+  board_id: Number
+  task: Task
+}
+
+export type KanbanActions = MoveBoardAction | UpdateBoardAction | MoveTaskAction | InsertTaskAction | RemoveTaskAction | AppendTask;
 
 function reducer(state: { boards: Board[] }, action: KanbanActions) {
   switch(action.type) {
     case 'move-board':
       return produce(state, draft => {
-        draft.boards.splice(action.index, 1);
-        draft.boards.splice(action.atIndex, 0, action.board);
+        const board = draft.boards.find(b => b.board_id == action.board_id);
+        if(board) {
+          draft.boards.splice(draft.boards.indexOf(board), 1);
+          draft.boards.splice(action.atIndex, 0, board);
+        }
       });
     case 'update-board':
       return produce(state, draft => {
         draft.boards[action.index] = action.board; 
       });
+    case 'move-task':
+      return produce(state, draft => {
+        const tasks = draft.boards.find(i => i.board_id == action.board_id)?.tasks;
+        if(tasks) {
+          tasks.splice(action.removeIndex, 1);
+          tasks.splice(action.atIndex, 0, action.task);
+        }
+      });
+    case 'insert-task':
+      return produce(state, draft => {
+        const tasks = draft.boards.find(i => i.board_id == action.board_id)?.tasks;
+        tasks?.splice(action.atIndex, 0, action.newTask);
+      });
+    case 'remove-task':
+      return produce(state, draft => {
+        const board = draft.boards.find(i => i.board_id == action.board_id);
+        if(board)
+          board.tasks = board.tasks.filter(t => t.task_id != action.task_id);
+      });
+    case 'append-task':
+      return produce(state, draft => {
+        const board = draft.boards.find(i => i.board_id == action.board_id);
+        board?.tasks.push(action.task);
+      })
+    default:
+      throw Error('Unimplemented action:', action);
   }
   return state;
 }
