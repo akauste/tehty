@@ -14,10 +14,13 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
     board.backgroundColor || ""
   );
   const [show, setShow] = useState<boolean>(board.show || true);
+  const [showDoneTasks, setShowDoneTasks] = useState<boolean>(
+    board.showDoneTasks || true
+  );
 
   const save = (event: React.FormEvent) => {
     event.preventDefault();
-    update({ ...board, name, backgroundColor, show });
+    update({ ...board, name, backgroundColor, show, showDoneTasks });
     close();
   };
 
@@ -57,6 +60,14 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
             onChange={() => setShow((s) => !s)}
           />
           Show
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showDoneTasks}
+            onChange={() => setShowDoneTasks((s) => !s)}
+          />
+          Show done tasks
         </label>
         <div className="flex w-full gap-2">
           <button

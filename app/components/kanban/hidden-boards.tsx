@@ -9,6 +9,7 @@ interface HiddenBoardsProps {
 
 const HiddenBoards = ({ hiddenBoards, dispatch }: HiddenBoardsProps) => {
   const [showList, setShowList] = useState(false);
+
   return (
     <span>
       <button

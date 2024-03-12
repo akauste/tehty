@@ -26,10 +26,10 @@ const AddBoardButton = ({
         <BoardEdit
           board={{
             board_id: Math.ceil(Math.random() * 10000),
-            user_id: "",
+            user_id,
             orderno: 0,
             name: "",
-            backgroundColor: "",
+            backgroundColor: "#94a3b8",
             show: true,
             showDoneTasks: true,
             tasks: [],
