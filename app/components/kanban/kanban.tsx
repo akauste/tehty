@@ -8,6 +8,7 @@ import { produce } from "immer";
 import { Board, Task } from "@/lib/db";
 import BoardEdit from "./board-edit";
 import AddBoardButton from "./add-board-button";
+import HiddenBoards from "./hidden-boards";
 
 const tasks: Task[] = [
   {
@@ -358,28 +359,7 @@ export default function Kanban({ user_id }: { user_id: string }) {
       <div className="flex w-full my-2 gap-2">
         <h1 className="flex-grow">Kanban test</h1>
         {hiddenBoards.length > 0 && (
-          <span className="bg-gray-300 border border-gray-600 rounded-full px-1 text-gray-800">
-            {hiddenBoards.length} hidden boards
-            <div className="absolute z-10 bg-white p-2 shadow-md shadow-slate-400">
-              <ul>
-                {hiddenBoards.map((b) => (
-                  <li>
-                    <button
-                      className="hover:text-sky-800"
-                      onClick={() =>
-                        dispatch({
-                          type: "update-board",
-                          board: { ...b, show: true },
-                        })
-                      }
-                    >
-                      {b.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </span>
+          <HiddenBoards hiddenBoards={hiddenBoards} dispatch={dispatch} />
         )}
         <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
           Action
