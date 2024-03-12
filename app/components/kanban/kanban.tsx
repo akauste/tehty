@@ -1,8 +1,10 @@
 'use client';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import BoardList from "./board-list";
+import BoardList, { Board } from "./board-list";
 import { Todo } from "@/lib/db";
+import { useReducer } from "react";
+import {produce} from "immer";
 
 const tasks = [
   { task_id: 1, category: 1,  name: 'Task 1 (lime)', description: 'Description of the first task. Long description to test the clamping when we go on for too long', backgroundColor: '#a3e635', tags: ['#tag1'] },
@@ -32,10 +34,39 @@ const boards = [
   { board_id: 4, backgroundColor: '#a3e635', name: 'Done', tasks: tasks.filter(t => t.category === 4) },
 ];
 
+type MoveBoardAction = {
+  type: 'move-board'
+  index: number
+  atIndex: number
+  board: Board
+}
+type UpdateBoardAction = {
+  type: 'update-board'
+  index: number
+  board: Board
+}
+export type KanbanActions = MoveBoardAction | UpdateBoardAction;
+
+function reducer(state: { boards: Board[] }, action: KanbanActions) {
+  switch(action.type) {
+    case 'move-board':
+      return produce(state, draft => {
+        draft.boards.splice(action.index, 1);
+        draft.boards.splice(action.atIndex, 0, action.board);
+      });
+    case 'update-board':
+      return produce(state, draft => {
+        draft.boards[action.index] = action.board; 
+      });
+  }
+  return state;
+}
+
 export default function Kanban(
   {user_id}: {user_id: string}
   //{user_id, todos}: {user_id: string, todos: Todo[]}
   ) {
+  const [state, dispatch] = useReducer(reducer, {boards});
 
   return <DndProvider backend={HTML5Backend}>
     <div className="flex w-full my-2 gap-2"> 
@@ -45,7 +76,7 @@ export default function Kanban(
       <button className=" px-1 border border-slate-500 rounded">+ Add task</button>
       <button className=" px-1 border border-slate-500 rounded">+ Add board</button>
     </div>
-    <BoardList user_id={user_id} list={boards} />
+    <BoardList user_id={user_id} list={state.boards} dispatch={dispatch} />
     <br />
   </DndProvider>
 }

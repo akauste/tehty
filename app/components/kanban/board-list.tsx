@@ -2,10 +2,11 @@
 import { NewTodo, Todo } from "@/lib/db";
 import Board from "./board-item";
 //import TodoAdd from "./board-add";
-import { useCallback, useEffect, useState } from "react";
+import { Dispatch, useCallback, useEffect, useState } from "react";
 import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import BoardItem from "./board-item";
+import { KanbanActions } from '@/app/components/kanban/kanban';
 
 // const getTodos = async () : Promise<Todo[]> => {
 //   const data = await fetch('/api/todos');
@@ -45,15 +46,11 @@ export type Board = {
   tasks: Task[];
 }
 
-const BoardList : React.FC<{user_id: string, list: Board[]}> = ({user_id, list}) => {
-  const [boards, setBoards] = useState<Board[]>(list);
+const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<KanbanActions>}> = ({user_id, list, dispatch}) => {
+  const boards = list;
 
   const updateBoard = (index: number, board: Board) => {
-    setBoards(old => {
-      const newBoards = old.map(b => ({...b}));
-      newBoards[index] = {...board};
-      return newBoards;
-    })
+    dispatch({type: 'update-board', index, board});
   }
   
   // useEffect(() => {
@@ -80,15 +77,9 @@ const BoardList : React.FC<{user_id: string, list: Board[]}> = ({user_id, list})
 
   const moveBoard = useCallback((id: string, atIndex: number) => {
       const { board, index } = findBoard(id);
-      setBoards(old => {
-        const list = old.map(b => ({...b, tasks: b.tasks.map(t => ({...t}))})) //[...old];
-        list.splice(index, 1);
-        list.splice(atIndex, 0, board);
-        //console.log(old.map(t => t.todo_id).join(',') + ' -> '+ list.map(t => t.todo_id).join(','), todo);
-        return list;
-      });
+      dispatch({type: 'move-board', index, atIndex, board});
     },
-    [findBoard, setBoards]);
+    [findBoard]);
 
   const updateOrder = async () => {
     // const res = await fetch('/api/todos', {
