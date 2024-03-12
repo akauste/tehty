@@ -33,14 +33,9 @@ export const bgColors = [
 ];
 
 const BoardItem: React.FC<IBoard> = ({board, update, remove, moveBoard, findBoard, onDrop, dispatch}) => {
-  //const [b, setB] = useState(board);
   const [boardEdit, setBoardEdit] = useState(false);
   const toggleBoardEdit = () => setBoardEdit(v => !v);
   const bgColor = board.backgroundColor;
-
-  /*useEffect(() => {
-    update(board);
-  }, [board])*/
   
   // const toggleDone = () => {
   //   fetch('/api/todo', {

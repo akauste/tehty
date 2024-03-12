@@ -52,10 +52,6 @@ const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<K
   const updateBoard = (index: number, board: Board) => {
     dispatch({type: 'update-board', index, board});
   }
-  
-  // useEffect(() => {
-  //   getTodos().then(list => setTodos(list));
-  // }, []);
 
   // const insertTodo = (task: string) => {
   //   addTodo({ task, user_id, done: false, orderno: null}).then(newTodo => setTodos(old => [...old, newTodo]));

@@ -14,10 +14,6 @@ interface TaskListProps {
 const TaskList = ({board_id, list, dispatch}: TaskListProps) => {
   const tasks = list;
 
-  // useEffect(() => {
-  //   setTasks(list);
-  // }, [list]);
-
   const find = useCallback((id: Number) => {
     const task = tasks.filter((t) => t.task_id === id)[0]
     return {
@@ -30,28 +26,15 @@ const TaskList = ({board_id, list, dispatch}: TaskListProps) => {
 const move = useCallback((id: Number, atIndex: number) => {
     const { task, index } = find(id);
     dispatch({type: 'move-task', board_id: task.category, removeIndex: index, atIndex, task});
-    // setTasks(old => {
-    //   const list = [...old];
-    //   if(index != undefined)
-    //     list.splice(index, 1);
-    //   list.splice(atIndex, 0, task);
-    //   return list;
-    // });
   },
   [find]);
 
 const insertAt = useCallback((newTask: Task, atIndex: number) => {
   dispatch({type: 'insert-task', board_id,  newTask, atIndex});
-  // setTasks(old => {
-  //   const list = [...old];
-  //   list.splice(atIndex, 0, newTask);
-  //   return list;
-  // });
-}, [find]);
+}, []);
 
 const remove = useCallback((task_id: Number) => {
   dispatch({type: 'remove-task', board_id, task_id});
-  //setTasks(old => old.filter(t => t.task_id != id));
 }, []);
 
 const updateOrder = async () => {

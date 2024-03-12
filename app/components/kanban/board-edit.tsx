@@ -16,7 +16,7 @@ const BoardEdit = ({board, update, close}: BoardEditProps) => {
     close();
   }
 
-  return <div className="absolute w-44 bg-slate-100 dark:bg-slate-700 shadow-sm shadow-slate-800">
+  return <div className="absolute z-10 w-44 bg-slate-100 dark:bg-slate-700 shadow-sm shadow-slate-800">
     <form onSubmit={save} className="p-2 flex flex-col space-y-1">
       <label>Name</label>
       <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="border border-slate-500 rounded w-full" /> 
