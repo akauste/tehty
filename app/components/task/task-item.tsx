@@ -22,7 +22,7 @@ const TaskItem: React.FC<TasksProps> = ({task, remove, insertAt, move, find, onD
         isDragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
-        console.log('end handler!!!', task.name, item.task.name, task.category, item.task.category);
+        console.log('end handler!!!', task.name, item.task.name, task.board_id, item.task.board_id);
         const { id: droppedId, originalIndex } = item;
         const didDrop = monitor.didDrop()
         if (!didDrop) {
@@ -41,21 +41,21 @@ const TaskItem: React.FC<TasksProps> = ({task, remove, insertAt, move, find, onD
     () => ({
       accept: 'task',
       hover({ id: draggedId, task: sourceTask }: {id: Number, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
-        if(task.category == sourceTask.category) {
+        if(task.board_id == sourceTask.board_id) {
           if (draggedId !== task.task_id) {
             const { index: overIndex } = find(task.task_id)
             move(draggedId, overIndex)
           }
         }
         else {
-          console.log('HOVER OVER OTHER CATEGORY src/tgt:', sourceTask.category, task.category);
+          console.log('HOVER OVER OTHER CATEGORY src/tgt:', sourceTask.board_id, task.board_id);
         }
       },
       drop({id: draggedId, task: sourceTask, removeOld}: {id: Number, originalIndex: number, task: Task, removeOld: (id: Number) => void}) {
-        if(task.category != sourceTask.category) {
-          console.log('NEWDROP HANDLER', task.category);
+        if(task.board_id != sourceTask.board_id) {
+          console.log('NEWDROP HANDLER', task.board_id);
           const {index} = find(task.task_id);
-          insertAt({...sourceTask, category: task.category}, index);
+          insertAt({...sourceTask, board_id: task.board_id}, index);
           removeOld(sourceTask.task_id);
         }
       }

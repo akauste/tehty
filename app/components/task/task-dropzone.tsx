@@ -23,7 +23,7 @@ const TaskDropzone = ({board_id, dispatch}: TaskDropzoneProps) => {
         }
       },*/
       drop({id: draggedId, task: sourceTask}: {id: Number, task: Task}) {
-        if(board_id != sourceTask.category) {
+        if(board_id != sourceTask.board_id) {
           dispatch({type: 'append-remove-task', board_id, task: sourceTask});
         }
       }

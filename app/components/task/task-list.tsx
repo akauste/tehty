@@ -26,7 +26,7 @@ const TaskList = ({board_id, list, dispatch}: TaskListProps) => {
 
 const move = useCallback((id: Number, atIndex: number) => {
     const { task, index } = find(id);
-    dispatch({type: 'move-task', board_id: task.category, removeIndex: index, atIndex, task});
+    dispatch({type: 'move-task', board_id: task.board_id, removeIndex: index, atIndex, task});
   },
   [find]);
 

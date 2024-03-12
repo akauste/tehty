@@ -32,7 +32,7 @@ import { KanbanActions } from '@/app/components/kanban/kanban';
 
 export type Task = {
   task_id: Number;
-  category: Number;
+  board_id: Number;
   name: string;
   description: string;
   backgroundColor: string;
