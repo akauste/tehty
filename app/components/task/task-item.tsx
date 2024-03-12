@@ -5,10 +5,10 @@ import { Assignment } from "@mui/icons-material";
 
 interface TasksProps {
   task: Task;
-  remove: (id: Number) => void;
-  move: (id: Number, to: number) => void;
+  remove: (id: number) => void;
+  move: (id: number, to: number) => void;
   insertAt: (task: Task, atIndex: number) => void;
-  find: (id: Number) => { index: number };
+  find: (id: number) => { index: number };
   onDrop: () => void;
 }
 
@@ -61,7 +61,7 @@ const TaskItem: React.FC<TasksProps> = ({
         id: draggedId,
         task: sourceTask,
       }: {
-        id: Number;
+        id: number;
         originalIndex: number;
         task: Task;
         removeOld: (id: Number) => void;
@@ -84,7 +84,7 @@ const TaskItem: React.FC<TasksProps> = ({
         task: sourceTask,
         removeOld,
       }: {
-        id: Number;
+        id: number;
         originalIndex: number;
         task: Task;
         removeOld: (id: Number) => void;
