@@ -62,13 +62,18 @@ type RemoveTaskAction = {
   board_id: Number
   task_id: Number
 }
-type AppendTask = {
+type AppendTaskAction = {
   type: 'append-task'
   board_id: Number
   task: Task
 }
+type AppendRemoveTaskAction = {
+  type: 'append-remove-task'
+  board_id: Number
+  task: Task
+}
 
-export type KanbanActions = MoveBoardAction | UpdateBoardAction | MoveTaskAction | InsertTaskAction | RemoveTaskAction | AppendTask;
+export type KanbanActions = MoveBoardAction | UpdateBoardAction | MoveTaskAction | InsertTaskAction | RemoveTaskAction | AppendTaskAction | AppendRemoveTaskAction;
 
 function reducer(state: { boards: Board[] }, action: KanbanActions) {
   switch(action.type) {
@@ -95,7 +100,7 @@ function reducer(state: { boards: Board[] }, action: KanbanActions) {
     case 'insert-task':
       return produce(state, draft => {
         const tasks = draft.boards.find(i => i.board_id == action.board_id)?.tasks;
-        tasks?.splice(action.atIndex, 0, action.newTask);
+        tasks?.splice(action.atIndex, 0, {...action.newTask, category: action.board_id});
       });
     case 'remove-task':
       return produce(state, draft => {
@@ -108,6 +113,15 @@ function reducer(state: { boards: Board[] }, action: KanbanActions) {
         const board = draft.boards.find(i => i.board_id == action.board_id);
         board?.tasks.push(action.task);
       })
+      case 'append-remove-task':
+        return produce(state, draft => {
+          const oldBoard = draft.boards.find(i => i.board_id == action.task.category);
+          if(oldBoard)
+            oldBoard.tasks = oldBoard.tasks.filter(t => t.task_id != action.task.task_id);
+
+          const board = draft.boards.find(i => i.board_id == action.board_id);
+          board?.tasks.push({...action.task, category: action.board_id});
+        })
     default:
       throw Error('Unimplemented action:', action);
   }

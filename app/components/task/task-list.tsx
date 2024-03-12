@@ -3,6 +3,7 @@ import { Task } from "../kanban/board-list"
 import TaskItem from "./task-item"
 import { Dispatch, useCallback, useEffect, useState } from "react"
 import { KanbanActions } from "../kanban/kanban"
+import TaskDropzone from "./task-dropzone"
 
 interface TaskListProps {
   user_id: string
@@ -50,7 +51,9 @@ const updateOrder = async () => {
 
   return <ul className="space-y-2">
     {
+      tasks.length ?
       tasks.map(t => <TaskItem key={t.task_id.toString()} task={t} insertAt={insertAt} remove={remove} move={move} find={find} onDrop={updateOrder} />)
+      : <TaskDropzone board_id={board_id} dispatch={dispatch} />
     }
   </ul>
 }
