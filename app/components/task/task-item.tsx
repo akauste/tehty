@@ -2,6 +2,9 @@
 import { useDrag, useDrop } from "react-dnd";
 import { Task } from "@/lib/db";
 import { Assignment } from "@mui/icons-material";
+import { Dispatch, useState } from "react";
+import AddTaskModal from "./add-task-modal";
+import { KanbanActions } from "../kanban/kanban";
 
 interface TasksProps {
   task: Task;
@@ -9,6 +12,7 @@ interface TasksProps {
   move: (id: number, to: number) => void;
   insertAt: (task: Task, atIndex: number) => void;
   find: (id: number) => { index: number };
+  dispatch: Dispatch<KanbanActions>;
   onDrop: () => void;
 }
 
@@ -18,8 +22,10 @@ const TaskItem: React.FC<TasksProps> = ({
   insertAt,
   move,
   find,
+  dispatch,
   onDrop,
 }) => {
+  const [editTask, setEditTask] = useState(false);
   const originalIndex = find(task.task_id).index;
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
@@ -100,6 +106,12 @@ const TaskItem: React.FC<TasksProps> = ({
     [find, move]
   );
 
+  const updateTask = (task: Task) => {
+    console.log("updateTask", task);
+    dispatch({ type: "update-task", task });
+    setEditTask(false);
+  };
+
   const now = new Date();
   const isLate = task.dueDate && task.dueDate < now;
   return (
@@ -121,10 +133,19 @@ const TaskItem: React.FC<TasksProps> = ({
             {task.dueDate && (
               <span>{task.dueDate.toLocaleDateString("fi")}</span>
             )}
-            <Assignment
-              fontSize="small"
-              className="float-right hover:text-sky-800"
-            />
+            <button onClick={() => setEditTask((s) => !s)}>
+              <Assignment
+                fontSize="small"
+                className="float-right hover:text-sky-800"
+              />
+            </button>
+            {editTask ? (
+              <AddTaskModal
+                task={task}
+                save={updateTask}
+                close={() => setEditTask(false)}
+              />
+            ) : null}
           </div>
         </div>
         <h3

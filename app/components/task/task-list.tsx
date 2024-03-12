@@ -67,6 +67,7 @@ const TaskList = ({ board_id, list, dispatch }: TaskListProps) => {
             remove={remove}
             move={move}
             find={find}
+            dispatch={dispatch}
             onDrop={updateOrder}
           />
         ))

@@ -3,12 +3,13 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardList from "./board-list";
 import { Todo } from "@/lib/db";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { produce } from "immer";
 import { Board, Task } from "@/lib/db";
 import BoardEdit from "./board-edit";
 import AddBoardButton from "./add-board-button";
 import HiddenBoards from "./hidden-boards";
+import AddTaskModal from "../task/add-task-modal";
 
 const tasks: Task[] = [
   {
@@ -248,6 +249,10 @@ type InsertTaskAction = {
   atIndex: number;
   newTask: Task;
 };
+type UpdateTaskAction = {
+  type: "update-task";
+  task: Task;
+};
 type RemoveTaskAction = {
   type: "remove-task";
   board_id: number;
@@ -270,6 +275,7 @@ export type KanbanActions =
   | AddBoardAction
   | MoveTaskAction
   | InsertTaskAction
+  | UpdateTaskAction
   | RemoveTaskAction
   | AppendTaskAction
   | AppendRemoveTaskAction;
@@ -318,6 +324,15 @@ function reducer(state: { boards: Board[] }, action: KanbanActions) {
           board_id: action.board_id,
         });
       });
+    case "update-task":
+      return produce(state, (draft) => {
+        const board = draft.boards.find(
+          (i) => i.board_id === action.task.board_id
+        ) as Board;
+        const task = board.tasks.find((t) => t.task_id === action.task.task_id);
+        const index = board.tasks.indexOf(task!);
+        board.tasks[index] = { ...action.task };
+      });
     case "remove-task":
       return produce(state, (draft) => {
         const board = draft.boards.find((i) => i.board_id == action.board_id);
@@ -327,7 +342,8 @@ function reducer(state: { boards: Board[] }, action: KanbanActions) {
     case "append-task":
       return produce(state, (draft) => {
         const board = draft.boards.find((i) => i.board_id == action.board_id);
-        board?.tasks.push(action.task);
+        board?.tasks.push({ ...action.task, orderno: board.tasks.length });
+        console.log("Append:", board);
       });
     case "append-remove-task":
       return produce(state, (draft) => {
@@ -353,6 +369,15 @@ export default function Kanban({ user_id }: { user_id: string }) {
   const [state, dispatch] = useReducer(reducer, { boards });
 
   const hiddenBoards = state.boards.filter((b) => !b.show);
+  const visibleBoards = state.boards.filter((b) => b.show);
+
+  const [showAddTask, setShowAddTask] = useState(false);
+
+  const addTask = (task: Task) => {
+    console.log("addTask", task);
+    dispatch({ type: "append-task", board_id: task.board_id, task });
+    setShowAddTask(false);
+  };
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -367,9 +392,21 @@ export default function Kanban({ user_id }: { user_id: string }) {
         <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
           Other
         </button>
-        <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
-          + Add task
-        </button>
+        {visibleBoards.length > 0 && (
+          <button
+            className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800"
+            onClick={() => setShowAddTask((s) => !s)}
+          >
+            + Add task
+          </button>
+        )}
+        {showAddTask ? (
+          <AddTaskModal
+            boards={visibleBoards}
+            save={addTask}
+            close={() => setShowAddTask(false)}
+          />
+        ) : null}
         <AddBoardButton user_id={user_id} dispatch={dispatch} />
       </div>
       <BoardList user_id={user_id} list={state.boards} dispatch={dispatch} />
