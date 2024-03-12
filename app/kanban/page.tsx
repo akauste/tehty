@@ -1,12 +1,36 @@
 import Kanban from "@/app/components/kanban/kanban";
+import { auth } from "@/auth";
+import { Task, userBoards, userTasks } from "@/lib/db";
 
-export default function Sub() {
-  return <>
-    <h2>Kanban</h2>
-    <p>Point of this is testing the layouts for different levels, here the top layout is showing the main header etc.,
-      but there is also a layout for info pages, and routes under that are showing that.
-    </p>
+const getBoards = async (user_id: string) => {
+  const boards = await userBoards(user_id);
+  const tasks = await userTasks(user_id);
+  const boardTasks: { [key: number]: Task[] } = { 0: [] };
+  boards.forEach((b) => (boardTasks[b.board_id] = []));
+  tasks.forEach((t) =>
+    boardTasks[t.board_id]
+      ? boardTasks[t.board_id].push({ ...t, tags: [] })
+      : boardTasks[0].push({ ...t, board_id: 0, tags: [] })
+  );
+  return boards.map((b) => ({ ...b, tasks: boardTasks[b.board_id] }));
+};
 
-    <Kanban user_id="testuser" />
-  </>
+export default async function KanbanPage() {
+  const session = await auth();
+  const user_id = session?.user?.email as string;
+
+  const boards = getBoards(user_id);
+
+  return (
+    <>
+      <h2>Kanban</h2>
+      <p>
+        Point of this is testing the layouts for different levels, here the top
+        layout is showing the main header etc., but there is also a layout for
+        info pages, and routes under that are showing that.
+      </p>
+
+      <Kanban user_id="testuser" />
+    </>
+  );
 }

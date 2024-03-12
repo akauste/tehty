@@ -1,12 +1,11 @@
-'use client';
+"use client";
 import { NewTodo, Todo } from "@/lib/db";
-import Board from "./board-item";
 //import TodoAdd from "./board-add";
 import { Dispatch, useCallback, useEffect, useState } from "react";
-import { DndProvider, useDrop } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardItem from "./board-item";
-import { KanbanActions } from '@/app/components/kanban/kanban';
+import { KanbanActions } from "@/app/components/kanban/kanban";
 
 // const getTodos = async () : Promise<Todo[]> => {
 //   const data = await fetch('/api/todos');
@@ -30,28 +29,33 @@ import { KanbanActions } from '@/app/components/kanban/kanban';
 //   return await data.json();
 // }
 
-export type Task = {
+import { Board, Task } from "@/lib/db";
+/*export type Task = {
   task_id: Number;
   board_id: Number;
   name: string;
   description: string;
   backgroundColor: string;
   tags: string[]
-}
+}*/
 
-export type Board = {
+/*export type Board = {
   board_id: Number;
   name: string;
   backgroundColor: string;
   tasks: Task[];
-}
+}*/
 
-const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<KanbanActions>}> = ({user_id, list, dispatch}) => {
+const BoardList: React.FC<{
+  user_id: string;
+  list: Board[];
+  dispatch: Dispatch<KanbanActions>;
+}> = ({ user_id, list, dispatch }) => {
   const boards = list;
 
-  const updateBoard = (index: number, board: Board) => {
-    dispatch({type: 'update-board', index, board});
-  }
+  // const updateBoard = (index: number, board: Board) => {
+  //   dispatch({ type: "update-board", index, board });
+  // };
 
   // const insertTodo = (task: string) => {
   //   addTodo({ task, user_id, done: false, orderno: null}).then(newTodo => setTodos(old => [...old, newTodo]));
@@ -62,19 +66,23 @@ const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<K
   //   deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
   // }
 
-  const findBoard = useCallback((id: Number) => {
-      const board = boards.filter((b) => b.board_id === id)[0]
+  const findBoard = useCallback(
+    (id: number) => {
+      const board = boards.filter((b) => b.board_id === id)[0];
       return {
         board,
         index: boards.indexOf(board),
-      }
+      };
     },
-    [boards]);
+    [boards]
+  );
 
-  const moveBoard = useCallback((board_id: Number, atIndex: number) => {
-      dispatch({type: 'move-board', board_id, atIndex});
+  const moveBoard = useCallback(
+    (board_id: number, atIndex: number) => {
+      dispatch({ type: "move-board", board_id, atIndex });
     },
-    [findBoard]);
+    [findBoard]
+  );
 
   const updateOrder = async () => {
     // const res = await fetch('/api/todos', {
@@ -85,23 +93,28 @@ const BoardList : React.FC<{user_id: string, list: Board[], dispatch: Dispatch<K
     // });
     // const data = await res.json();
     // console.log('Updated: ', data);
-  }
+  };
 
-  const [, drop] = useDrop(() => ({ accept: 'board' }));
+  const [, drop] = useDrop(() => ({ accept: "board" }));
 
-  return <ul className="flex w-full min-h-100 space-x-4" ref={drop}>
-      { boards.map((b, i) => (
-        <BoardItem 
-          key={i} 
-          board={b} 
-          update={(board) => updateBoard(i, board)} 
-          remove={() => {} /*removeTodo*/} 
-          moveBoard={moveBoard} 
-          findBoard={findBoard} 
-          onDrop={updateOrder} 
-          dispatch={dispatch} 
-        />))}
+  return (
+    <ul className="flex w-full min-h-100 space-x-4" ref={drop}>
+      {boards
+        .filter((b) => b.show)
+        .map((b, i) => (
+          <BoardItem
+            key={i}
+            board={b}
+            update={(board) => {} /*updateBoard(i, board)*/}
+            remove={() => {} /*removeTodo*/}
+            moveBoard={moveBoard}
+            findBoard={findBoard}
+            onDrop={updateOrder}
+            dispatch={dispatch}
+          />
+        ))}
       {/* <TodoAdd user_id={user_id} addTodo={insertTodo} /> */}
     </ul>
-}
+  );
+};
 export default BoardList;

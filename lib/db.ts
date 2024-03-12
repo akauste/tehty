@@ -4,6 +4,8 @@ import { Generated, Selectable, Insertable, Updateable } from "kysely";
 
 interface Database {
   todo: TodoTable;
+  board: BoardTable;
+  task: TaskTable;
 }
 
 const db = createKysely<Database>();
@@ -68,3 +70,51 @@ export interface TodoTable {
 export type Todo = Selectable<TodoTable>;
 export type NewTodo = Insertable<TodoTable>;
 export type TodoUpdate = Updateable<TodoTable>;
+
+export interface BoardTable {
+  board_id: Generated<number>;
+  orderno: number | null;
+  user_id: string;
+  name: string;
+  backgroundColor: string;
+  show: boolean;
+  showDoneTasks: boolean;
+}
+
+export type Board = Selectable<BoardTable> & { tasks: Task[] };
+export type NewBoard = Insertable<BoardTable>;
+export type BoardUpdate = Updateable<BoardTable>;
+
+export interface TaskTable {
+  task_id: Generated<number>;
+  board_id: number;
+  orderno: number | null;
+  user_id: string;
+  name: string;
+  backgroundColor: string;
+  description: string;
+  dueDate: Date;
+  done: boolean;
+}
+
+export type Task = Selectable<TaskTable> & { tags: string[] };
+export type NewTask = Insertable<TaskTable>;
+export type TaskUpdate = Updateable<TaskTable>;
+
+export async function userBoards(user_id: string) {
+  return db
+    .selectFrom("board")
+    .selectAll()
+    .where("user_id", "=", user_id)
+    .orderBy(["orderno", "board_id"])
+    .execute();
+}
+
+export async function userTasks(user_id: string) {
+  return db
+    .selectFrom("task")
+    .selectAll()
+    .where("user_id", "=", user_id)
+    .orderBy(["orderno", "task_id"])
+    .execute();
+}
