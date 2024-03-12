@@ -1,7 +1,7 @@
 import { Assignment } from "@mui/icons-material"
 import { Task } from "../kanban/board-list"
 import TaskItem from "./task-item"
-import { Dispatch, useCallback, useEffect, useState } from "react"
+import { Dispatch, useCallback } from "react"
 import { KanbanActions } from "../kanban/kanban"
 import TaskDropzone from "./task-dropzone"
 
@@ -24,19 +24,18 @@ const TaskList = ({board_id, list, dispatch}: TaskListProps) => {
   },
   [tasks]);
 
-const move = useCallback((id: Number, atIndex: number) => {
-    const { task, index } = find(id);
-    dispatch({type: 'move-task', board_id: task.board_id, removeIndex: index, atIndex, task});
-  },
-  [find]);
+const move = (id: Number, atIndex: number) => {
+  const { task, index } = find(id);
+  dispatch({type: 'move-task', board_id: task.board_id, removeIndex: index, atIndex, task});
+}
 
-const insertAt = useCallback((newTask: Task, atIndex: number) => {
+const insertAt = (newTask: Task, atIndex: number) => {
   dispatch({type: 'insert-task', board_id,  newTask, atIndex});
-}, []);
+}
 
-const remove = useCallback((task_id: Number) => {
+const remove = (task_id: Number) => {
   dispatch({type: 'remove-task', board_id, task_id});
-}, []);
+}
 
 const updateOrder = async () => {
     // const res = await fetch('/api/todos', {
