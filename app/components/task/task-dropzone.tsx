@@ -24,7 +24,7 @@ const TaskDropzone = ({ board_id, dispatch }: TaskDropzoneProps) => {
   return (
     <li
       ref={(node) => drop(node)}
-      className="p-8 bg-sky-200 opacity-50 hover:opacity-100"
+      className=" p-8 bg-sky-200 opacity-0 hover:opacity-100"
     >
       Drop task here
     </li>

@@ -63,28 +63,28 @@ const TaskItem: React.FC<TasksProps> = ({
   const [, drop] = useDrop(
     () => ({
       accept: "task",
-      hover({
-        id: draggedId,
-        task: sourceTask,
-      }: {
-        id: number;
-        originalIndex: number;
-        task: Task;
-        removeOld: (id: Number) => void;
-      }) {
-        if (task.board_id == sourceTask.board_id) {
-          if (draggedId !== task.task_id) {
-            const { index: overIndex } = find(task.task_id);
-            move(draggedId, overIndex);
-          }
-        } else {
-          console.log(
-            "HOVER OVER OTHER CATEGORY src/tgt:",
-            sourceTask.board_id,
-            task.board_id
-          );
-        }
-      },
+      // hover({
+      //   id: draggedId,
+      //   task: sourceTask,
+      // }: {
+      //   id: number;
+      //   originalIndex: number;
+      //   task: Task;
+      //   removeOld: (id: Number) => void;
+      // }) {
+      //   if (task.board_id == sourceTask.board_id) {
+      //     if (draggedId !== task.task_id) {
+      //       const { index: overIndex } = find(task.task_id);
+      //       move(draggedId, overIndex);
+      //     }
+      //   } else {
+      //     console.log(
+      //       "HOVER OVER OTHER CATEGORY src/tgt:",
+      //       sourceTask.board_id,
+      //       task.board_id
+      //     );
+      //   }
+      // },
       drop({
         id: draggedId,
         task: sourceTask,
@@ -95,12 +95,12 @@ const TaskItem: React.FC<TasksProps> = ({
         task: Task;
         removeOld: (id: Number) => void;
       }) {
-        if (task.board_id != sourceTask.board_id) {
-          console.log("NEWDROP HANDLER", task.board_id);
-          const { index } = find(task.task_id);
-          insertAt({ ...sourceTask, board_id: task.board_id }, index);
-          removeOld(sourceTask.task_id);
-        }
+        //if (task.board_id != sourceTask.board_id) {
+        console.log("NEWDROP HANDLER", task.board_id);
+        const { index } = find(task.task_id);
+        removeOld(sourceTask.task_id);
+        insertAt({ ...sourceTask, board_id: task.board_id }, index);
+        //}
       },
     }),
     [find, move]
