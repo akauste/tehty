@@ -108,7 +108,7 @@ const BoardItem: React.FC<IBoard> = ({
   return (
     <li
       ref={(node) => drag(drop(node))}
-      className="bg-slate-200 dark:bg-slate-700 flex-1 flex-grow min-h-96 border border-slate-500 shadow-sm shadow-slate-500 space-y-2"
+      className="bg-slate-200 dark:bg-slate-700 flex-1 flex-grow min-h-96 border border-slate-500 shadow-sm shadow-slate-500 space-y-2 flex flex-col"
     >
       <header
         className="flex border-b border-slate-400 p-1"
@@ -138,9 +138,6 @@ const BoardItem: React.FC<IBoard> = ({
         list={board.tasks}
         dispatch={dispatch}
       />
-      <button className="mt-2 hover:text-sky-800 dark:hover:text-sky-200">
-        <Add fontSize="small" /> Add
-      </button>
     </li>
   );
 };

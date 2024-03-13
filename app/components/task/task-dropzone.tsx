@@ -2,6 +2,7 @@ import { useDrop } from "react-dnd";
 import { Task } from "@/lib/db";
 import { Dispatch } from "react";
 import { KanbanActions } from "../kanban/kanban";
+import { Add } from "@mui/icons-material";
 
 interface TaskDropzoneProps {
   board_id: number;
@@ -24,9 +25,12 @@ const TaskDropzone = ({ board_id, dispatch }: TaskDropzoneProps) => {
   return (
     <li
       ref={(node) => drop(node)}
-      className=" p-8 bg-sky-200 opacity-0 hover:opacity-100"
+      className="flex-grow p-2 text-center bg-sky-200 opacity-0 hover:opacity-100"
     >
-      Drop task here
+      <button className="mt-2 w-full border border-transparent hover:border-sky-600 hover:text-sky-800 dark:hover:text-sky-200">
+        <Add fontSize="small" /> Add
+      </button>
+      <p className="p-2">Drop task here</p>
     </li>
   );
 };
