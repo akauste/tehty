@@ -2,6 +2,8 @@
 import { Board, Task } from "@/lib/db";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { bgColors } from "../kanban/board-item";
+import ColorSelector from "../ui/color-selector";
 
 interface AddTaskModalProps {
   boards?: Board[];
@@ -13,6 +15,9 @@ interface AddTaskModalProps {
 const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
   const [name, setName] = useState(task?.name || "");
   const [description, setDescription] = useState(task?.description || "");
+  const [backgroundColor, setBackgroundColor] = useState(
+    task?.backgroundColor || bgColors[0]
+  );
   const [boardId, setBoardId] = useState(
     boards ? boards[0].board_id : task?.board_id
   );
@@ -31,7 +36,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
       user_id: "testuser",
       name,
       description,
-      backgroundColor: task?.backgroundColor ?? "",
+      backgroundColor: backgroundColor,
       dueDate: dueDate ? new Date(dueDate) : null,
       done: task?.done || false,
       tags: task?.tags || [],
@@ -67,7 +72,11 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
               className="border border-slate-500 rounded"
             />
             <label>backgroundColor</label>
-            <div>Color selector here...</div>
+            <ColorSelector
+              colors={bgColors}
+              color={backgroundColor}
+              setColor={setBackgroundColor}
+            />
             <label>Tags</label>
             <input type="text" className="border border-slate-500 rounded" />
             {boards && (

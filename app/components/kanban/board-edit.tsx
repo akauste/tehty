@@ -1,6 +1,7 @@
 import { Board } from "@/lib/db";
 import { bgColors } from "./board-item";
 import { useState } from "react";
+import ColorSelector from "../ui/color-selector";
 
 interface BoardEditProps {
   board: Board;
@@ -36,7 +37,12 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
           className="border border-slate-500 rounded w-full"
         />
         <label>Color</label>
-        <div className="flex flex-row gap-1">
+        <ColorSelector
+          colors={bgColors}
+          color={backgroundColor}
+          setColor={setBackgroundColor}
+        />
+        {/*<div className="flex flex-row gap-1">
           {bgColors.map((color) => (
             <button
               key={color}
@@ -48,11 +54,7 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
               }}
             ></button>
           ))}
-        </div>
-        <select className="border border-slate-500 rounded">
-          <option>Default</option>
-          <option className="bg-sky-400">Blue</option>
-        </select>
+        </div> */}
         <label>
           <input
             type="checkbox"
