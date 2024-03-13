@@ -98,7 +98,7 @@ export interface TaskTable {
   done: boolean;
 }
 
-export type Task = Selectable<TaskTable> & { tags: string[] };
+export type Task = Selectable<TaskTable>; // & { tags: string[] };
 export type NewTask = Insertable<TaskTable>;
 export type TaskUpdate = Updateable<TaskTable>;
 
@@ -118,4 +118,20 @@ export async function userTasks(user_id: string) {
     .where("user_id", "=", user_id)
     .orderBy(["orderno", "task_id"])
     .execute();
+}
+
+export async function addTask(task: NewTask) {
+  const res = await db
+    .selectFrom("task")
+    .select(({ fn, val, ref }) => [fn.max<number>("orderno").as("orderno")])
+    .where("board_id", "=", task.board_id!)
+    .executeTakeFirst();
+
+  task.orderno = res ? res.orderno + 1 : 1;
+
+  return db
+    .insertInto("task")
+    .values({ ...task })
+    .returningAll()
+    .executeTakeFirstOrThrow();
 }

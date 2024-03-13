@@ -1,5 +1,5 @@
 "use client";
-import { Board, Task } from "@/lib/db";
+import { Board, NewTask, Task } from "@/lib/db";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { bgColors } from "../kanban/board-item";
@@ -8,7 +8,9 @@ import ColorSelector from "../ui/color-selector";
 interface AddTaskModalProps {
   boards?: Board[];
   task?: Task;
-  save: (task: Task) => void;
+  // BUG figure out, how to properly typecheck
+  // NewTask | Task depending on call location & if we want to create or update
+  save: (task: any) => void;
   close: () => void;
 }
 
@@ -29,8 +31,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
     console.log("saving...");
 
     event.preventDefault();
-    save({
-      task_id: task?.task_id ?? 0,
+    const data: NewTask = {
       board_id: boardId as number,
       orderno: task?.orderno || null,
       user_id: "testuser",
@@ -39,8 +40,10 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
       background_color: backgroundColor,
       due_date: dueDate ? new Date(dueDate) : null,
       done: task?.done || false,
-      tags: task?.tags || [],
-    });
+      //tags: task?.tags || [],
+    };
+    if (task?.task_id) data.task_id = task.task_id;
+    save(data);
   };
   return createPortal(
     <>

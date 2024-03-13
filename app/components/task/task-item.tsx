@@ -1,6 +1,6 @@
 "use client";
 import { useDrag, useDrop } from "react-dnd";
-import { Task } from "@/lib/db";
+import { NewTask, Task } from "@/lib/db";
 import { Assignment } from "@mui/icons-material";
 import { Dispatch, useState } from "react";
 import AddTaskModal from "./add-task-modal";
@@ -165,9 +165,9 @@ const TaskItem: React.FC<TasksProps> = ({
             {task.description}
           </p>
         )}
-        {task.tags.length > 0 && (
+        {/*task.tags.length > 0 && (
           <p className="text-sky-600 p-1 text-xs">{task.tags.join(", ")}</p>
-        )}
+        )*/}
       </section>
     </li>
   );

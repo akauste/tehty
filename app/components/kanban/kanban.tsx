@@ -19,7 +19,7 @@ const tasks: Task[] = [
     description:
       "Description of the first task. Long description to test the clamping when we go on for too long",
     background_color: "#a3e635",
-    tags: ["#tag1"],
+    //tags: ["#tag1"],
     due_date: new Date(),
     done: false,
     orderno: 1,
@@ -31,7 +31,7 @@ const tasks: Task[] = [
     name: "Task 2 (red)",
     description: "This one is important",
     background_color: "#f87171",
-    tags: ["#tag1", "#important", "#tagged"],
+    //tags: ["#tag1", "#important", "#tagged"],
     due_date: new Date("2000-01-01"),
     done: false,
     orderno: 2,
@@ -43,7 +43,7 @@ const tasks: Task[] = [
     name: "Task 3",
     description: "",
     background_color: "",
-    tags: [],
+    //tags: [],
     due_date: new Date("2024-03-13"),
     done: false,
     orderno: 2,
@@ -55,7 +55,7 @@ const tasks: Task[] = [
     name: "Task 4",
     description: "",
     background_color: "",
-    tags: [],
+    //tags: [],
     due_date: null, // new Date("13.3.2024"),
     done: false,
     orderno: 2,
@@ -371,7 +371,6 @@ export default function Kanban({
   user_id: string;
   boards: BoardTask[];
 }) {
-  //{user_id, todos}: {user_id: string, todos: Todo[]}
   const [state, dispatch] = useReducer(reducer, { boards });
 
   const hiddenBoards = state.boards.filter((b) => !b.show);
@@ -379,9 +378,20 @@ export default function Kanban({
 
   const [showAddTask, setShowAddTask] = useState(false);
 
-  const addTask = (task: Task) => {
+  const addTask = async (task: Task) => {
     console.log("addTask", task);
-    dispatch({ type: "append-task", board_id: task.board_id, task });
+    fetch("/api/task", {
+      method: "POST",
+      body: JSON.stringify(task),
+    })
+      .then((res) => res.json())
+      .then((newTask) =>
+        dispatch({
+          type: "append-task",
+          board_id: newTask.board_id,
+          task: newTask,
+        })
+      );
     setShowAddTask(false);
   };
 
