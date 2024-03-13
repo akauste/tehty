@@ -27,6 +27,7 @@ const TaskItem: React.FC<TasksProps> = ({
 }) => {
   const [editTask, setEditTask] = useState(false);
   const originalIndex = find(task.task_id).index;
+  const [clampDescription, setClampDescription] = useState(true);
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: "task",
@@ -155,9 +156,14 @@ const TaskItem: React.FC<TasksProps> = ({
           {task.name}
         </h3>
       </header>
-      <section className="bg-slate-300">
+      <section
+        className="bg-slate-300"
+        onClick={() => setClampDescription((s) => !s)}
+      >
         {task.description.length > 0 && (
-          <p className="p-1 text-xs line-clamp-3">{task.description}</p>
+          <p className={`p-1 text-xs ${clampDescription && "line-clamp-3"}`}>
+            {task.description}
+          </p>
         )}
         {task.tags.length > 0 && (
           <p className="text-sky-600 p-1 text-xs">{task.tags.join(", ")}</p>
