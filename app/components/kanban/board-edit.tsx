@@ -12,16 +12,22 @@ interface BoardEditProps {
 const BoardEdit = ({ board, update, close }: BoardEditProps) => {
   const [name, setName] = useState(board.name || "");
   const [backgroundColor, setBackgroundColor] = useState(
-    board.backgroundColor || ""
+    board.background_color || ""
   );
   const [show, setShow] = useState<boolean>(board.show || true);
   const [showDoneTasks, setShowDoneTasks] = useState<boolean>(
-    board.showDoneTasks || true
+    board.show_done_tasks || true
   );
 
   const save = (event: React.FormEvent) => {
     event.preventDefault();
-    update({ ...board, name, backgroundColor, show, showDoneTasks });
+    update({
+      ...board,
+      name,
+      background_color: backgroundColor,
+      show,
+      show_done_tasks: showDoneTasks,
+    });
     close();
   };
 

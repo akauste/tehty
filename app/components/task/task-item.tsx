@@ -114,7 +114,7 @@ const TaskItem: React.FC<TasksProps> = ({
   };
 
   const now = new Date();
-  const isLate = task.dueDate && task.dueDate < now;
+  const isLate = task.due_date && task.due_date < now;
   return (
     <li
       ref={(node) => drag(drop(node))}
@@ -122,7 +122,7 @@ const TaskItem: React.FC<TasksProps> = ({
     >
       <header
         className="mt-3 bg-slate-400"
-        style={{ backgroundColor: task.backgroundColor }}
+        style={{ backgroundColor: task.background_color }}
       >
         <div className="text-xs">
           &nbsp;
@@ -131,8 +131,8 @@ const TaskItem: React.FC<TasksProps> = ({
               isLate ? "bg-red-200 text-red-800" : "bg-slate-200"
             }  float-right border border-slate-500 mt-[-6px] flex gap-2 opacity-80`}
           >
-            {task.dueDate && (
-              <span>{task.dueDate.toLocaleDateString("fi")}</span>
+            {task.due_date && (
+              <span>{task.due_date.toLocaleDateString("fi")}</span>
             )}
             <button onClick={() => setEditTask((s) => !s)}>
               <Assignment
@@ -151,7 +151,7 @@ const TaskItem: React.FC<TasksProps> = ({
         </div>
         <h3
           className="px-1 bold"
-          style={{ backgroundColor: task.backgroundColor }}
+          style={{ backgroundColor: task.background_color }}
         >
           {task.name}
         </h3>

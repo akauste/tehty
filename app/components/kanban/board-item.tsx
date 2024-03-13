@@ -56,7 +56,8 @@ const BoardItem: React.FC<IBoard> = ({
 }) => {
   const [boardEdit, setBoardEdit] = useState(false);
   const toggleBoardEdit = () => setBoardEdit((v) => !v);
-  const bgColor = board.backgroundColor;
+  const bgColor = board.background_color;
+  console.log("bg:", board, board.background_color);
 
   // const toggleDone = () => {
   //   fetch('/api/todo', {

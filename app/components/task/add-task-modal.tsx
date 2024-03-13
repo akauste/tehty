@@ -16,13 +16,13 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
   const [name, setName] = useState(task?.name || "");
   const [description, setDescription] = useState(task?.description || "");
   const [backgroundColor, setBackgroundColor] = useState(
-    task?.backgroundColor || bgColors[0]
+    task?.background_color || bgColors[0]
   );
   const [boardId, setBoardId] = useState(
     boards ? boards[0].board_id : task?.board_id
   );
   const [dueDate, setDueDate] = useState(
-    task?.dueDate?.toLocaleDateString("en-CA")
+    task?.due_date?.toLocaleDateString("en-CA")
   );
 
   const saveTask = (event: React.FormEvent) => {
@@ -36,8 +36,8 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
       user_id: "testuser",
       name,
       description,
-      backgroundColor: backgroundColor,
-      dueDate: dueDate ? new Date(dueDate) : null,
+      background_color: backgroundColor,
+      due_date: dueDate ? new Date(dueDate) : null,
       done: task?.done || false,
       tags: task?.tags || [],
     });
@@ -71,7 +71,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
               onChange={(e) => setDueDate(e.target.value)}
               className="border border-slate-500 rounded"
             />
-            <label>backgroundColor</label>
+            <label>Background color</label>
             <ColorSelector
               colors={bgColors}
               color={backgroundColor}
@@ -90,7 +90,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
                     <option
                       key={b.board_id}
                       value={b.board_id}
-                      style={{ backgroundColor: b.backgroundColor }}
+                      style={{ backgroundColor: b.background_color }}
                     >
                       {b.name}
                     </option>

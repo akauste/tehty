@@ -1,5 +1,5 @@
 "use client";
-import { NewTodo, Todo } from "@/lib/db";
+import { BoardTask, NewTodo, Todo } from "@/lib/db";
 //import TodoAdd from "./board-add";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
@@ -48,11 +48,11 @@ import { Board, Task } from "@/lib/db";
 
 const BoardList: React.FC<{
   user_id: string;
-  list: Board[];
+  list: BoardTask[];
   dispatch: Dispatch<KanbanActions>;
 }> = ({ user_id, list, dispatch }) => {
   const boards = list;
-
+  console.log("BoardList boards:", boards);
   // const updateBoard = (index: number, board: Board) => {
   //   dispatch({ type: "update-board", index, board });
   // };

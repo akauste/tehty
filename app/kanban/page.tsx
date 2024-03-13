@@ -1,8 +1,8 @@
 import Kanban from "@/app/components/kanban/kanban";
 import { auth } from "@/auth";
-import { Task, userBoards, userTasks } from "@/lib/db";
+import { Task, BoardTask, userBoards, userTasks } from "@/lib/db";
 
-const getBoards = async (user_id: string) => {
+const getBoards = async (user_id: string): Promise<BoardTask[]> => {
   const boards = await userBoards(user_id);
   const tasks = await userTasks(user_id);
   const boardTasks: { [key: number]: Task[] } = { 0: [] };
@@ -19,7 +19,8 @@ export default async function KanbanPage() {
   const session = await auth();
   const user_id = session?.user?.email as string;
 
-  const boards = getBoards(user_id);
+  const boards = await getBoards(user_id);
+  console.log(boards);
 
   return (
     <>
@@ -30,7 +31,7 @@ export default async function KanbanPage() {
         info pages, and routes under that are showing that.
       </p>
 
-      <Kanban user_id="testuser" />
+      <Kanban user_id="testuser" boards={boards} />
     </>
   );
 }

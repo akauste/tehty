@@ -76,14 +76,15 @@ export interface BoardTable {
   orderno: number | null;
   user_id: string;
   name: string;
-  backgroundColor: string;
+  background_color: string;
   show: boolean;
-  showDoneTasks: boolean;
+  show_done_tasks: boolean;
 }
 
 export type Board = Selectable<BoardTable> & { tasks: Task[] };
 export type NewBoard = Insertable<BoardTable>;
 export type BoardUpdate = Updateable<BoardTable>;
+export type BoardTask = Board & { tasks: Task[] };
 
 export interface TaskTable {
   task_id: Generated<number>;
@@ -91,9 +92,9 @@ export interface TaskTable {
   orderno: number | null;
   user_id: string;
   name: string;
-  backgroundColor: string;
+  background_color: string;
   description: string;
-  dueDate: Date | null;
+  due_date: Date | null;
   done: boolean;
 }
 

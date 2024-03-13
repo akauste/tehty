@@ -2,7 +2,7 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardList from "./board-list";
-import { Todo } from "@/lib/db";
+import { BoardTask, Todo, userBoards } from "@/lib/db";
 import { useReducer, useState } from "react";
 import { produce } from "immer";
 import { Board, Task } from "@/lib/db";
@@ -18,9 +18,9 @@ const tasks: Task[] = [
     name: "Task 1 (lime)",
     description:
       "Description of the first task. Long description to test the clamping when we go on for too long",
-    backgroundColor: "#a3e635",
+    background_color: "#a3e635",
     tags: ["#tag1"],
-    dueDate: new Date(),
+    due_date: new Date(),
     done: false,
     orderno: 1,
     user_id: "testuser",
@@ -30,9 +30,9 @@ const tasks: Task[] = [
     board_id: 1,
     name: "Task 2 (red)",
     description: "This one is important",
-    backgroundColor: "#f87171",
+    background_color: "#f87171",
     tags: ["#tag1", "#important", "#tagged"],
-    dueDate: new Date("2000-01-01"),
+    due_date: new Date("2000-01-01"),
     done: false,
     orderno: 2,
     user_id: "testuser",
@@ -42,9 +42,9 @@ const tasks: Task[] = [
     board_id: 2,
     name: "Task 3",
     description: "",
-    backgroundColor: "",
+    background_color: "",
     tags: [],
-    dueDate: new Date("2024-03-13"),
+    due_date: new Date("2024-03-13"),
     done: false,
     orderno: 2,
     user_id: "testuser",
@@ -54,9 +54,9 @@ const tasks: Task[] = [
     board_id: 2,
     name: "Task 4",
     description: "",
-    backgroundColor: "",
+    background_color: "",
     tags: [],
-    dueDate: null, // new Date("13.3.2024"),
+    due_date: null, // new Date("13.3.2024"),
     done: false,
     orderno: 2,
     user_id: "testuser",
@@ -68,7 +68,7 @@ const t2 = [
     board_id: 3,
     name: "Task 5",
     description: "",
-    backgroundColor: "",
+    background_color: "",
     tags: [],
   },
   {
@@ -177,7 +177,7 @@ const t2 = [
   },
 ];
 
-const boards: Board[] = [
+const boards__ = [
   {
     board_id: 1,
     backgroundColor: "#94a3b8",
@@ -364,7 +364,13 @@ function reducer(state: { boards: Board[] }, action: KanbanActions) {
   return state;
 }
 
-export default function Kanban({ user_id }: { user_id: string }) {
+export default function Kanban({
+  user_id,
+  boards,
+}: {
+  user_id: string;
+  boards: BoardTask[];
+}) {
   //{user_id, todos}: {user_id: string, todos: Todo[]}
   const [state, dispatch] = useReducer(reducer, { boards });
 
@@ -379,6 +385,7 @@ export default function Kanban({ user_id }: { user_id: string }) {
     setShowAddTask(false);
   };
 
+  console.log("STATE", state);
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex w-full my-2 gap-2">

@@ -29,9 +29,9 @@ const AddBoardButton = ({
             user_id,
             orderno: 0,
             name: "",
-            backgroundColor: "#94a3b8",
+            background_color: "#94a3b8",
             show: true,
-            showDoneTasks: true,
+            show_done_tasks: true,
             tasks: [],
           }}
           update={addBoard}
