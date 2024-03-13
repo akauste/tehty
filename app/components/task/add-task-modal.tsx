@@ -44,7 +44,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
         onClick={close}
       ></div>
       <div className="fixed left-0 top-0 right-0 bottom-0 flex items-center justify-center h-screen z-50">
-        <div className="min-w-80 min-h-32 bg-white p-4">
+        <div className="min-w-80 min-h-32 bg-white dark:bg-black p-4">
           <form className="flex flex-col space-y-2" onSubmit={saveTask}>
             <label>Name</label>
             <input

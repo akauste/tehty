@@ -22,7 +22,7 @@ const HiddenBoards = ({ hiddenBoards, dispatch }: HiddenBoardsProps) => {
         <div className="absolute z-10 bg-white p-2 shadow-md shadow-slate-400 min-w-24">
           <ul>
             {hiddenBoards.map((b) => (
-              <li>
+              <li key={b.board_id}>
                 <button
                   className="hover:text-sky-800"
                   onClick={() =>
