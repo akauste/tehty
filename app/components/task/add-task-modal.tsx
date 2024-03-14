@@ -7,10 +7,8 @@ import ColorSelector from "../ui/color-selector";
 
 interface AddTaskModalProps {
   boards?: Board[];
-  task?: Task;
-  // BUG figure out, how to properly typecheck
-  // NewTask | Task depending on call location & if we want to create or update
-  save: (task: any) => void;
+  task: Partial<Task>;
+  save: (task: Partial<Task>) => void;
   close: () => void;
 }
 
@@ -31,10 +29,10 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
     console.log("saving...");
 
     event.preventDefault();
-    const data: NewTask = {
+    const data: Partial<Task> = {
       board_id: boardId as number,
       orderno: task?.orderno || null,
-      user_id: "testuser",
+      //user_id: "testuser",
       name,
       description,
       background_color: backgroundColor,

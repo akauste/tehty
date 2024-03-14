@@ -58,22 +58,18 @@ const TaskList = ({ board_id, list, dispatch }: TaskListProps) => {
 
   return (
     <ul className="space-y-2 flex-grow flex flex-col">
-      {
-        tasks.length
-          ? tasks.map((t) => (
-              <TaskItem
-                key={t.task_id.toString()}
-                task={t}
-                insertAt={insertAt}
-                remove={remove}
-                move={move}
-                find={find}
-                dispatch={dispatch}
-                onDrop={updateOrder}
-              />
-            ))
-          : null /*<TaskDropzone board_id={board_id} dispatch={dispatch} />*/
-      }
+      {tasks.map((t) => (
+        <TaskItem
+          key={t.task_id.toString()}
+          task={t}
+          insertAt={insertAt}
+          remove={remove}
+          move={move}
+          find={find}
+          dispatch={dispatch}
+          onDrop={updateOrder}
+        />
+      ))}
       <TaskDropzone board_id={board_id} dispatch={dispatch} />
     </ul>
   );

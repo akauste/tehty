@@ -14,9 +14,14 @@ const TaskDropzone = ({ board_id, dispatch }: TaskDropzoneProps) => {
     () => ({
       accept: "task",
       drop({ id: draggedId, task: sourceTask }: { id: number; task: Task }) {
-        if (board_id != sourceTask.board_id) {
-          dispatch({ type: "append-remove-task", board_id, task: sourceTask });
-        }
+        console.log("DropZone dropped");
+        fetch("/api/board/" + board_id + "/append", {
+          method: "POST",
+          body: JSON.stringify({ task_id: sourceTask.task_id }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log("Got back:", data));
+        dispatch({ type: "append-remove-task", board_id, task: sourceTask });
       },
     }),
     []

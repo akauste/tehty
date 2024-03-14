@@ -1,6 +1,6 @@
 //import { Todo } from '@/app/components/todo-item';
 import { createKysely } from "@vercel/postgres-kysely";
-import { Generated, Selectable, Insertable, Updateable } from "kysely";
+import { Generated, Selectable, Insertable, Updateable, sql } from "kysely";
 
 interface Database {
   todo: TodoTable;
@@ -109,6 +109,79 @@ export async function userBoards(user_id: string) {
     .where("user_id", "=", user_id)
     .orderBy(["orderno", "board_id"])
     .execute();
+}
+
+export async function appendBoardTask(
+  board_id: number,
+  task_id: number,
+  user_id: string
+) {
+  return db
+    .updateTable("task")
+    .set((eb) => ({
+      board_id,
+      orderno: eb.fn.coalesce(
+        eb(
+          eb
+            .selectFrom("task")
+            .select(eb.fn.max<number>("orderno").as("new_order"))
+            .where("board_id", "=", board_id)
+            .limit(1),
+          "+",
+          1
+        ),
+        sql<number>`1`
+      ),
+    }))
+    .where((eb) =>
+      eb.and([eb("task_id", "=", task_id), eb("user_id", "=", user_id)])
+    )
+    .returningAll()
+    .executeTakeFirst();
+}
+
+export async function moveToBoardTask(
+  board_id: number,
+  task_id: number,
+  user_id: string,
+  index: number
+) {
+  // This will set orderno to 1, 2... leaving just one gap for the new index
+  /*
+    WITH ordering AS (
+      SELECT task_id, row_number() OVER (ORDER BY orderno) as "orderno"
+        FROM task
+        WHERE board_id=1
+        ORDER BY orderno)
+    UPDATE task t
+      SET orderno=(CASE WHEN o.orderno <=2 THEN o.orderno ELSE o.orderno+1 END)
+    FROM ordering AS o 
+    WHERE t.task_id=o.task_id 
+  */
+  // First step is to update all the previous values to run in same order as before,
+  // but leave a gap for the newly dropped task
+  console.log("set ordernos of old");
+  await sql`WITH ordering AS (
+    SELECT task_id, row_number() OVER (ORDER BY orderno) as "orderno"
+      FROM task
+      WHERE board_id=${board_id}
+      ORDER BY orderno)
+  UPDATE task t
+    SET orderno=(CASE WHEN o.orderno <=${index} THEN o.orderno ELSE o.orderno+1 END)
+  FROM ordering AS o 
+  WHERE t.task_id=o.task_id`.execute(db);
+
+  return db
+    .updateTable("task")
+    .set((eb) => ({
+      board_id,
+      orderno: index + 1,
+    }))
+    .where((eb) =>
+      eb.and([eb("task_id", "=", task_id), eb("user_id", "=", user_id)])
+    )
+    .returningAll()
+    .executeTakeFirst();
 }
 
 export async function userTasks(user_id: string) {
