@@ -47,6 +47,10 @@ type AppendRemoveTaskAction = {
   board_id: number;
   task: Task;
 };
+type ClearUnsyncedAction = {
+  type: "clear-unsynced";
+  cutLength: number;
+};
 
 export type KanbanActions =
   | MoveBoardAction
@@ -57,10 +61,28 @@ export type KanbanActions =
   | UpdateTaskAction
   | RemoveTaskAction
   | AppendTaskAction
-  | AppendRemoveTaskAction;
+  | AppendRemoveTaskAction
+  | ClearUnsyncedAction;
+
+type SyncBoardOrder = {
+  type: "board-order";
+  board_ids: number[];
+  action: any;
+};
+type SyncBoard = {
+  type: "update-board";
+  board: Board;
+};
+type SyncTaskOrder = {
+  type: "task-order";
+  board_id: number;
+  task_ids: number[];
+  action: any;
+};
+export type SyncActions = SyncBoardOrder | SyncBoard | SyncTaskOrder;
 
 export function kanbanReducer(
-  state: { boards: Board[] },
+  state: { boards: Board[]; unSyncedActions: SyncActions[] },
   action: KanbanActions
 ) {
   switch (action.type) {
@@ -71,6 +93,11 @@ export function kanbanReducer(
           draft.boards.splice(draft.boards.indexOf(board), 1);
           draft.boards.splice(action.atIndex, 0, board);
         }
+        draft.unSyncedActions.push({
+          type: "board-order",
+          board_ids: draft.boards.map((b) => b.board_id),
+          action: { ...action },
+        });
       });
     case "update-board":
       return produce(state, (draft) => {
@@ -78,9 +105,18 @@ export function kanbanReducer(
           draft.boards.find((b) => b.board_id == action.board.board_id)!
         );
         draft.boards[i] = action.board;
+
+        draft.unSyncedActions.push({
+          type: "update-board",
+          board: draft.boards[i],
+        });
       });
     case "add-board":
       return produce(state, (draft) => {
+        // draft.unSyncedActions.push({
+        //   sync: "add-board",
+        //   action: { ...action },
+        // });
         draft.boards.push(action.board);
       });
     case "move-task":
@@ -94,10 +130,20 @@ export function kanbanReducer(
             ...action.task,
             board_id: action.board_id,
           });
+          draft.unSyncedActions.push({
+            type: "task-order",
+            board_id: action.board_id,
+            task_ids: tasks?.map((t) => t.task_id),
+            action: { ...action },
+          });
         }
       });
     case "insert-task":
       return produce(state, (draft) => {
+        // draft.unSyncedActions.push({
+        //   sync: "insert-task",
+        //   action: { ...action },
+        // });
         const tasks = draft.boards.find(
           (i) => i.board_id == action.board_id
         )?.tasks;
@@ -108,6 +154,10 @@ export function kanbanReducer(
       });
     case "update-task":
       return produce(state, (draft) => {
+        // draft.unSyncedActions.push({
+        //   sync: "update-task",
+        //   action: { ...action },
+        // });
         const board = draft.boards.find(
           (i) => i.board_id === action.task.board_id
         ) as Board;
@@ -117,18 +167,30 @@ export function kanbanReducer(
       });
     case "remove-task":
       return produce(state, (draft) => {
+        // draft.unSyncedActions.push({
+        //   sync: "remove-task",
+        //   action: { ...action },
+        // });
         const board = draft.boards.find((i) => i.board_id == action.board_id);
         if (board)
           board.tasks = board.tasks.filter((t) => t.task_id != action.task_id);
       });
     case "append-task":
       return produce(state, (draft) => {
+        // draft.unSyncedActions.push({
+        //   sync: "append-task",
+        //   action: { ...action },
+        // });
         const board = draft.boards.find((i) => i.board_id == action.board_id);
         board?.tasks.push({ ...action.task, orderno: board.tasks.length });
         console.log("Append:", board);
       });
     case "append-remove-task":
       return produce(state, (draft) => {
+        // draft.unSyncedActions.push({
+        //   sync: "append-remove-task",
+        //   action: { ...action },
+        // });
         const oldBoard = draft.boards.find(
           (i) => i.board_id == action.task.board_id
         );
@@ -139,6 +201,14 @@ export function kanbanReducer(
 
         const board = draft.boards.find((i) => i.board_id == action.board_id);
         board?.tasks.push({ ...action.task, board_id: action.board_id });
+      });
+    case "clear-unsynced":
+      return produce(state, (draft) => {
+        draft.unSyncedActions = [];
+        // draft.unSyncedActions = draft.unSyncedActions.splice(
+        //   0,
+        //   action.cutLength
+        // ); // splice 0, length to make it work, when new changes happen while processing the old ones
       });
     default:
       throw Error("Unimplemented action:", action);

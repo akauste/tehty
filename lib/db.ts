@@ -140,24 +140,23 @@ export async function appendBoardTask(
     .executeTakeFirst();
 }
 
+export async function updateBoardOrder(board_ids: number[], user_id: string) {
+  board_ids.forEach((id, idx) => {
+    db.updateTable("board")
+      .set({ orderno: idx })
+      .where((eb) =>
+        eb.and([eb("board_id", "=", id), eb("user_id", "=", user_id)])
+      )
+      .execute();
+  });
+}
+
 export async function moveToBoardTask(
   board_id: number,
   task_id: number,
   user_id: string,
   index: number
 ) {
-  // This will set orderno to 1, 2... leaving just one gap for the new index
-  /*
-    WITH ordering AS (
-      SELECT task_id, row_number() OVER (ORDER BY orderno) as "orderno"
-        FROM task
-        WHERE board_id=1
-        ORDER BY orderno)
-    UPDATE task t
-      SET orderno=(CASE WHEN o.orderno <=2 THEN o.orderno ELSE o.orderno+1 END)
-    FROM ordering AS o 
-    WHERE t.task_id=o.task_id 
-  */
   // First step is to update all the previous values to run in same order as before,
   // but leave a gap for the newly dropped task
   console.log("set ordernos of old");
