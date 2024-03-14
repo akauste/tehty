@@ -1,9 +1,7 @@
 "use client";
-import { BoardTask, NewTodo, Todo } from "@/lib/db";
-//import TodoAdd from "./board-add";
-import { Dispatch, useCallback, useEffect, useState } from "react";
+import { BoardTask } from "@/lib/db";
+import { Dispatch, useCallback } from "react";
 import { DndProvider, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardItem from "./board-item";
 import { KanbanActions } from "@/lib/kanban-reducer";
 
@@ -29,23 +27,6 @@ import { KanbanActions } from "@/lib/kanban-reducer";
 //   return await data.json();
 // }
 
-import { Board, Task } from "@/lib/db";
-/*export type Task = {
-  task_id: Number;
-  board_id: Number;
-  name: string;
-  description: string;
-  backgroundColor: string;
-  tags: string[]
-}*/
-
-/*export type Board = {
-  board_id: Number;
-  name: string;
-  backgroundColor: string;
-  tasks: Task[];
-}*/
-
 const BoardList: React.FC<{
   user_id: string;
   list: BoardTask[];
@@ -66,23 +47,17 @@ const BoardList: React.FC<{
   //   deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
   // }
 
-  const findBoard = useCallback(
-    (id: number) => {
-      const board = boards.filter((b) => b.board_id === id)[0];
-      return {
-        board,
-        index: boards.indexOf(board),
-      };
-    },
-    [boards]
-  );
+  const findBoard = (id: number) => {
+    const board = boards.filter((b) => b.board_id === id)[0];
+    return {
+      board,
+      index: boards.indexOf(board),
+    };
+  };
 
-  const moveBoard = useCallback(
-    (board_id: number, atIndex: number) => {
-      dispatch({ type: "move-board", board_id, atIndex });
-    },
-    [dispatch]
-  );
+  const moveBoard = (board_id: number, atIndex: number) => {
+    dispatch({ type: "move-board", board_id, atIndex });
+  };
 
   const updateOrder = async () => {
     // const res = await fetch('/api/todos', {
