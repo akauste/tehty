@@ -20,7 +20,7 @@ import {
 } from "@mui/icons-material";
 import BoardEdit from "./board-edit";
 import TaskList from "../task/task-list";
-import { KanbanActions } from "./kanban";
+import { KanbanActions } from "@/lib/kanban-reducer";
 
 interface IBoard {
   board: Board;

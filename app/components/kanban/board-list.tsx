@@ -5,7 +5,7 @@ import { Dispatch, useCallback, useEffect, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardItem from "./board-item";
-import { KanbanActions } from "@/app/components/kanban/kanban";
+import { KanbanActions } from "@/lib/kanban-reducer";
 
 // const getTodos = async () : Promise<Todo[]> => {
 //   const data = await fetch('/api/todos');
@@ -81,7 +81,7 @@ const BoardList: React.FC<{
     (board_id: number, atIndex: number) => {
       dispatch({ type: "move-board", board_id, atIndex });
     },
-    [findBoard]
+    [dispatch]
   );
 
   const updateOrder = async () => {

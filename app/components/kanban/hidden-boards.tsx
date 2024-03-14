@@ -1,6 +1,6 @@
 import { Board } from "@/lib/db";
 import { Dispatch, useState } from "react";
-import { KanbanActions } from "./kanban";
+import { KanbanActions } from "@/lib/kanban-reducer";
 
 interface HiddenBoardsProps {
   hiddenBoards: Board[];

@@ -4,7 +4,7 @@ import { NewTask, Task } from "@/lib/db";
 import { Assignment } from "@mui/icons-material";
 import { Dispatch, useState } from "react";
 import AddTaskModal from "./add-task-modal";
-import { KanbanActions } from "../kanban/kanban";
+import { KanbanActions } from "@/lib/kanban-reducer";
 
 interface TasksProps {
   task: Task;

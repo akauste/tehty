@@ -48,19 +48,6 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
           color={backgroundColor}
           setColor={setBackgroundColor}
         />
-        {/*<div className="flex flex-row gap-1">
-          {bgColors.map((color) => (
-            <button
-              key={color}
-              className="w-4 h-4 hover:opacity-50"
-              onClick={() => setBackgroundColor(color)}
-              style={{
-                backgroundColor: color,
-                boxShadow: color == backgroundColor ? `1px -1px 2px black` : "",
-              }}
-            ></button>
-          ))}
-        </div> */}
         <label>
           <input
             type="checkbox"

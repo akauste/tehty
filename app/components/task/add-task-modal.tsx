@@ -8,7 +8,9 @@ import ColorSelector from "../ui/color-selector";
 interface AddTaskModalProps {
   boards?: Board[];
   task: Partial<Task>;
-  save: (task: Partial<Task>) => void;
+  //save: (task: Partial<Task>) => void;
+  // BUG: still problems with the prop typing
+  save: (task: any) => void;
   close: () => void;
 }
 
@@ -30,8 +32,9 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
 
     event.preventDefault();
     const data: Partial<Task> = {
+      ...task,
       board_id: boardId as number,
-      orderno: task?.orderno || null,
+      //orderno: task?.orderno || null,
       //user_id: "testuser",
       name,
       description,
@@ -40,7 +43,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
       done: task?.done || false,
       //tags: task?.tags || [],
     };
-    if (task?.task_id) data.task_id = task.task_id;
+    //if (task?.task_id) data.task_id = task.task_id;
     save(data);
   };
   return createPortal(

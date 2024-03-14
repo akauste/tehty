@@ -1,7 +1,7 @@
 import { useDrop } from "react-dnd";
 import { Task } from "@/lib/db";
 import { Dispatch } from "react";
-import { KanbanActions } from "../kanban/kanban";
+import { KanbanActions } from "@/lib/kanban-reducer";
 import { Add } from "@mui/icons-material";
 
 interface TaskDropzoneProps {

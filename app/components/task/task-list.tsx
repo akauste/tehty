@@ -2,7 +2,7 @@ import { Assignment } from "@mui/icons-material";
 import { Task } from "@/lib/db";
 import TaskItem from "./task-item";
 import { Dispatch, useCallback } from "react";
-import { KanbanActions } from "../kanban/kanban";
+import { KanbanActions } from "@/lib/kanban-reducer";
 import TaskDropzone from "./task-dropzone";
 
 interface TaskListProps {
