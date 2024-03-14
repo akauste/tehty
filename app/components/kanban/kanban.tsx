@@ -378,7 +378,7 @@ export default function Kanban({
 
   const [showAddTask, setShowAddTask] = useState(false);
 
-  const addTask = async (task: Task) => {
+  const addTask = async (task: Partial<Task>) => {
     console.log("addTask", task);
     fetch("/api/task", {
       method: "POST",
@@ -420,6 +420,7 @@ export default function Kanban({
         {showAddTask ? (
           <AddTaskModal
             boards={visibleBoards}
+            task={{}}
             save={addTask}
             close={() => setShowAddTask(false)}
           />
