@@ -2,6 +2,11 @@ import { auth } from "@/auth";
 import { addTask } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET(req: NextRequest) {
+  // This is here just as a temporary test to see if I can get the testing working
+  return NextResponse.json({ ping: "pong" });
+}
+
 export async function POST(req: NextRequest) {
   const session = await auth();
   const user_id = session?.user?.email;

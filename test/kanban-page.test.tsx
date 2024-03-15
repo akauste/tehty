@@ -2,8 +2,9 @@ import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Page from "../app/kanban/page";
 
-// Does not pass currently, need to start working this out with something simpler
 test("Page", async () => {
+  // Method to test async Pages found here:
+  // https://github.com/testing-library/react-testing-library/issues/1209#issuecomment-1546980195
   render(await Page());
   expect(
     screen.getByRole("heading", { level: 2, name: "Kanban" })

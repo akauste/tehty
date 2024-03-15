@@ -12,10 +12,20 @@ export default defineConfig({
       ),
       "@/auth": path.resolve(__dirname, "./__mocks__/auth.ts"),
       "@/lib/db": path.resolve(__dirname, "./__mocks__/db.ts"),
+      "next/server": path.resolve(__dirname, "./node_modules/next/server.js"),
       "@": path.resolve(__dirname, "./"),
     },
   },
   test: {
     environment: "jsdom",
+    deps: {
+      optimizer: {
+        web: {
+          // exclude: ["next/server"],
+          // or disable alltogether
+          enabled: false,
+        },
+      },
+    },
   },
 });

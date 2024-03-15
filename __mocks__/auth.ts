@@ -2,7 +2,7 @@ export const auth = async () => {
   return Promise.resolve({
     session: {
       user: {
-        user_id: "test",
+        user_id: "test@example.test",
       },
     },
   });
