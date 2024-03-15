@@ -1,3 +1,5 @@
+import { NewTask } from "@/lib/db";
+
 export const userBoards = async () => {
   return Promise.resolve([
     {
@@ -21,6 +23,14 @@ export const userBoards = async () => {
       tasks: [],
     },
   ]);
+};
+
+export const addTask = async (data: NewTask) => {
+  const ret = {
+    ...data,
+    task_id: 123,
+  };
+  return Promise.resolve(ret);
 };
 
 export const userTasks = async () => {
