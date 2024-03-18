@@ -1,4 +1,4 @@
-import { NewTask } from "@/lib/db";
+import { NewTask, Task } from "@/lib/db";
 
 export const userBoards = async () => {
   return Promise.resolve([
@@ -35,4 +35,9 @@ export const addTask = async (data: NewTask) => {
 
 export const userTasks = async () => {
   return Promise.resolve([]);
+};
+
+export const updateTask = async (task: Task) => {
+  const ret = { ...task };
+  return Promise.resolve(ret);
 };

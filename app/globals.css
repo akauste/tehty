@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* tailwind is missing an easy modal-style */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
 /*
 :root {
   --foreground-rgb: 0, 0, 0;

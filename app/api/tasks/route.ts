@@ -12,7 +12,12 @@ export async function POST(req: NextRequest) {
   const user_id = session?.user?.email;
 
   if (!user_id)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      { status: 401 }
+    );
 
   console.log("Adding task");
   const data: NewTask = await req.json();
@@ -26,3 +31,8 @@ export async function POST(req: NextRequest) {
   console.log(data, newRow);
   return NextResponse.json({ ...newRow });
 }
+
+// Task sorting happens under the board PATCH /api/boards/[board_id]/tasks
+// export async function PATCH(req: NextRequest) {
+//   // Implement the task sorting here
+// }

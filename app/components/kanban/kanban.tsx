@@ -10,6 +10,8 @@ import HiddenBoards from "./hidden-boards";
 import AddTaskModal from "../task/add-task-modal";
 import { KanbanActions, kanbanReducer } from "@/lib/kanban-reducer";
 import { CheckCircleOutline, Sync, Update } from "@mui/icons-material";
+import backend, { IKanbanBackend } from "@/lib/backend-api";
+import AddTaskButton from "./add-task-button";
 
 const unSyncedActions: any[] = [];
 
@@ -24,27 +26,37 @@ export default function Kanban({
     boards,
     unSyncedActions,
   });
+  const [syncStatus, setSyncStatus] = useState({ sync: false, error: false });
 
   const hiddenBoards = state.boards.filter((b) => !b.show);
   const visibleBoards = state.boards.filter((b) => b.show);
 
-  const [showAddTask, setShowAddTask] = useState(false);
-
-  const addTask = async (task: Partial<Task>) => {
-    console.log("addTask", task);
-    fetch("/api/task", {
-      method: "POST",
-      body: JSON.stringify(task),
-    })
-      .then((res) => res.json())
-      .then((newTask) =>
-        dispatch({
-          type: "append-task",
-          board_id: newTask.board_id,
-          task: newTask,
-        })
-      );
-    setShowAddTask(false);
+  const dispatchBackend = (action: KanbanActions) => {
+    switch (action.type) {
+      case "update-task":
+        console.warn("dispatchBackend(update-task: ...)");
+        backend.updateTask(action.task);
+        break;
+      case "append-task":
+        //const newTask = await backend.createTask(action.task);
+        backend.createTask(action.task).then((newTask) => {
+          dispatch({
+            type: "append-task",
+            board_id: newTask.board_id,
+            task: newTask,
+          });
+        });
+        break;
+      case "append-remove-task":
+        let task_ids = state.boards
+          .find((b) => b.board_id == action.board_id)
+          ?.tasks.map((t) => t.task_id)
+          .filter((id) => id != action.task.task_id);
+        task_ids?.splice(action.index, 0, action.task.task_id);
+        console.warn("Saving task order (ids): " + task_ids);
+        if (task_ids) backend.sortTasks(action.board_id, task_ids);
+    }
+    dispatch(action);
   };
 
   console.log("STATE", state);
@@ -52,8 +64,17 @@ export default function Kanban({
     <DndProvider backend={HTML5Backend}>
       <div className="flex w-full my-2 gap-2">
         <h1 className="flex-grow">Kanban test</h1>
+
+        <div>
+          {syncStatus.sync ? "Syncing" : ""}
+          {syncStatus.error ? "Failed to sync" : ""}
+        </div>
+
         {hiddenBoards.length > 0 && (
-          <HiddenBoards hiddenBoards={hiddenBoards} dispatch={dispatch} />
+          <HiddenBoards
+            hiddenBoards={hiddenBoards}
+            dispatch={dispatchBackend}
+          />
         )}
         <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
           Action
@@ -61,29 +82,21 @@ export default function Kanban({
         <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
           Other
         </button>
-        {visibleBoards.length > 0 && (
-          <button
-            className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800"
-            onClick={() => setShowAddTask((s) => !s)}
-          >
-            + Add task
-          </button>
-        )}
-        {showAddTask ? (
-          <AddTaskModal
-            boards={visibleBoards}
-            task={{}}
-            save={addTask}
-            close={() => setShowAddTask(false)}
-          />
-        ) : null}
-        <AddBoardButton user_id={user_id} dispatch={dispatch} />
+        <AddTaskButton
+          visibleBoards={visibleBoards}
+          dispatch={dispatchBackend}
+        />
+        <AddBoardButton user_id={user_id} dispatch={dispatchBackend} />
         <SyncSorting
           unSyncedActions={state.unSyncedActions}
-          dispatch={dispatch}
+          dispatch={dispatchBackend}
         />
       </div>
-      <BoardList user_id={user_id} list={state.boards} dispatch={dispatch} />
+      <BoardList
+        user_id={user_id}
+        list={state.boards}
+        dispatch={dispatchBackend}
+      />
       <br />
     </DndProvider>
   );

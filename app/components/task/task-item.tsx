@@ -8,23 +8,12 @@ import { KanbanActions } from "@/lib/kanban-reducer";
 
 interface TasksProps {
   task: Task;
-  remove: (id: number) => void;
   move: (id: number, to: number) => void;
-  insertAt: (task: Task, atIndex: number) => void;
   find: (id: number) => { index: number };
   dispatch: Dispatch<KanbanActions>;
-  onDrop: () => void;
 }
 
-const TaskItem: React.FC<TasksProps> = ({
-  task,
-  remove,
-  insertAt,
-  move,
-  find,
-  dispatch,
-  onDrop,
-}) => {
+const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
   const [editTask, setEditTask] = useState(false);
   const originalIndex = find(task.task_id).index;
   const [clampDescription, setClampDescription] = useState(true);
@@ -32,31 +21,11 @@ const TaskItem: React.FC<TasksProps> = ({
     () => ({
       type: "task",
       item: {
-        id: task.task_id,
-        originalIndex,
         task: { ...task },
-        removeOld: remove,
       },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
-      end: (item, monitor) => {
-        console.log(
-          "end handler!!!",
-          task.name,
-          item.task.name,
-          task.board_id,
-          item.task.board_id
-        );
-        const { id: droppedId, originalIndex } = item;
-        const didDrop = monitor.didDrop();
-        if (!didDrop) {
-          console.log("No drop", monitor);
-          move(droppedId, originalIndex);
-        } else {
-          onDrop();
-        }
-      },
     }),
     [originalIndex, move]
   );
@@ -65,24 +34,19 @@ const TaskItem: React.FC<TasksProps> = ({
     () => ({
       accept: "task",
       drop({
-        id: draggedId,
         task: sourceTask,
-        removeOld,
       }: {
         id: number;
         originalIndex: number;
         task: Task;
-        removeOld: (id: Number) => void;
       }) {
         const { index } = find(task.task_id);
-        removeOld(sourceTask.task_id);
-        fetch("/api/board/" + task.board_id + "/moveto", {
-          method: "POST",
-          body: JSON.stringify({ task_id: sourceTask.task_id, index }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log("moveto:", data));
-        insertAt({ ...sourceTask, board_id: task.board_id }, index);
+        dispatch({
+          type: "append-remove-task",
+          board_id: task.board_id,
+          index,
+          task: sourceTask,
+        });
       },
     }),
     [find, move]

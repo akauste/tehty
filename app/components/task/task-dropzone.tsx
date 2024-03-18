@@ -6,22 +6,21 @@ import { Add } from "@mui/icons-material";
 
 interface TaskDropzoneProps {
   board_id: number;
+  index: number;
   dispatch: Dispatch<KanbanActions>;
 }
 
-const TaskDropzone = ({ board_id, dispatch }: TaskDropzoneProps) => {
+const TaskDropzone = ({ board_id, index, dispatch }: TaskDropzoneProps) => {
   const [, drop] = useDrop(
     () => ({
       accept: "task",
       drop({ id: draggedId, task: sourceTask }: { id: number; task: Task }) {
-        console.log("DropZone dropped");
-        fetch("/api/board/" + board_id + "/append", {
-          method: "POST",
-          body: JSON.stringify({ task_id: sourceTask.task_id }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log("Got back:", data));
-        dispatch({ type: "append-remove-task", board_id, task: sourceTask });
+        dispatch({
+          type: "append-remove-task",
+          board_id,
+          index,
+          task: sourceTask,
+        });
       },
     }),
     []

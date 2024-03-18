@@ -1,4 +1,3 @@
-//import { Todo } from '@/app/components/todo-item';
 import { createKysely } from "@vercel/postgres-kysely";
 import { Generated, Selectable, Insertable, Updateable, sql } from "kysely";
 
@@ -71,6 +70,10 @@ export type Todo = Selectable<TodoTable>;
 export type NewTodo = Insertable<TodoTable>;
 export type TodoUpdate = Updateable<TodoTable>;
 
+/*
+  KANBAN tables & querys:
+*/
+
 export interface BoardTable {
   board_id: Generated<number>;
   orderno: number | null;
@@ -102,6 +105,23 @@ export type Task = Selectable<TaskTable>; // & { tags: string[] };
 export type NewTask = Insertable<TaskTable>;
 export type TaskUpdate = Updateable<TaskTable>;
 
+/* 
+  BOARD Crud operations:
+*/
+
+export async function createBoard(board: NewBoard) {
+  return db.insertInto("board").values(board).executeTakeFirstOrThrow();
+}
+// export async function getBoard(board_id: Board) {}
+export async function getUserBoard(user_id: string, board_id: number) {
+  return db
+    .selectFrom("board")
+    .selectAll()
+    .where((eb) =>
+      eb.and([eb("user_id", "=", user_id), eb("board_id", "=", board_id)])
+    );
+}
+
 export async function userBoards(user_id: string) {
   return db
     .selectFrom("board")
@@ -111,33 +131,28 @@ export async function userBoards(user_id: string) {
     .execute();
 }
 
-export async function appendBoardTask(
-  board_id: number,
-  task_id: number,
-  user_id: string
+export async function updateUserBoard(
+  board: BoardUpdate & { board_id: number; user_id: string }
 ) {
   return db
-    .updateTable("task")
-    .set((eb) => ({
-      board_id,
-      orderno: eb.fn.coalesce(
-        eb(
-          eb
-            .selectFrom("task")
-            .select(eb.fn.max<number>("orderno").as("new_order"))
-            .where("board_id", "=", board_id)
-            .limit(1),
-          "+",
-          1
-        ),
-        sql<number>`1`
-      ),
-    }))
+    .updateTable("board")
+    .set(board)
     .where((eb) =>
-      eb.and([eb("task_id", "=", task_id), eb("user_id", "=", user_id)])
+      eb.and([
+        eb("user_id", "=", board.user_id),
+        eb("board_id", "=", board.board_id),
+      ])
     )
     .returningAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
+}
+export async function deleteUserBoard(user_id: string, board_id: number) {
+  return db
+    .deleteFrom("board")
+    .where((eb) =>
+      eb.and([eb("user_id", "=", user_id), eb("board_id", "=", board_id)])
+    )
+    .execute();
 }
 
 export async function updateBoardOrder(board_ids: number[], user_id: string) {
@@ -206,4 +221,49 @@ export async function addTask(task: NewTask) {
     .values({ ...task })
     .returningAll()
     .executeTakeFirstOrThrow();
+}
+
+export async function getTask(task_id: number) {
+  // Implement get
+}
+
+export async function updateTask(task: TaskUpdate) {
+  if (!task.task_id || !task.user_id)
+    throw new Error("task_id or user_id missing");
+  // Implement update
+  return db
+    .updateTable("task")
+    .set({ ...task })
+    .where((eb) =>
+      eb.and([
+        eb("task_id", "=", task.task_id as number),
+        eb("user_id", "=", task.user_id as string),
+      ])
+    )
+    .returningAll()
+    .executeTakeFirstOrThrow();
+}
+
+export async function deleteTask(task_id: number) {
+  // Implement delete
+}
+
+export async function sortBoardTasks(board_id: number, task_ids: number[]) {
+  /*
+    UPDATE task t 
+    SET board_id=in.board_id, orderno=in.orderno 
+    FROM (VALUES (
+      board_id, orderno, task_id),
+      ()
+    ) AS in(board_id, orderno, task_id)
+    WHERE t.task_id = in.task_id
+  */
+  task_ids.forEach((task_id, orderno) => {
+    db.updateTable("task")
+      .set({ board_id, orderno: orderno })
+      .where("task_id", "=", task_id)
+      .execute();
+  });
+  // Maybe I should collect the promises, and then wait for all resolved or do everything in a transaction?
+  return task_ids.length;
 }

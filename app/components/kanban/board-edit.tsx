@@ -1,7 +1,10 @@
+"use client";
 import { Board } from "@/lib/db";
 import { bgColors } from "./board-item";
 import { useState } from "react";
 import ColorSelector from "../ui/color-selector";
+import { createPortal } from "react-dom";
+import Modal from "../ui/modal";
 
 interface BoardEditProps {
   board: Board;
@@ -32,7 +35,7 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
   };
 
   return (
-    <div className="absolute z-10 w-44 bg-slate-100 dark:bg-slate-700 shadow-sm shadow-slate-800">
+    <Modal close={close}>
       <form method="" onSubmit={save} className="p-2 flex flex-col space-y-1">
         <label>{board.board_id}</label>
         <label>Name</label>
@@ -81,7 +84,7 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
           </button>
         </div>
       </form>
-    </div>
+    </Modal>
   );
 };
 export default BoardEdit;

@@ -45,6 +45,7 @@ type AppendTaskAction = {
 type AppendRemoveTaskAction = {
   type: "append-remove-task";
   board_id: number;
+  index: number;
   task: Task;
 };
 type ClearUnsyncedAction = {
@@ -57,7 +58,7 @@ export type KanbanActions =
   | UpdateBoardAction
   | AddBoardAction
   | MoveTaskAction
-  | InsertTaskAction
+  //| InsertTaskAction
   | UpdateTaskAction
   | RemoveTaskAction
   | AppendTaskAction
@@ -138,20 +139,20 @@ export function kanbanReducer(
           });
         }
       });
-    case "insert-task":
-      return produce(state, (draft) => {
-        // draft.unSyncedActions.push({
-        //   sync: "insert-task",
-        //   action: { ...action },
-        // });
-        const tasks = draft.boards.find(
-          (i) => i.board_id == action.board_id
-        )?.tasks;
-        tasks?.splice(action.atIndex, 0, {
-          ...action.newTask,
-          board_id: action.board_id,
-        });
-      });
+    // case "insert-task":
+    //   return produce(state, (draft) => {
+    //     // draft.unSyncedActions.push({
+    //     //   sync: "insert-task",
+    //     //   action: { ...action },
+    //     // });
+    //     const tasks = draft.boards.find(
+    //       (i) => i.board_id == action.board_id
+    //     )?.tasks;
+    //     tasks?.splice(action.atIndex, 0, {
+    //       ...action.newTask,
+    //       board_id: action.board_id,
+    //     });
+    //   });
     case "update-task":
       return produce(state, (draft) => {
         // draft.unSyncedActions.push({
@@ -200,7 +201,12 @@ export function kanbanReducer(
           );
 
         const board = draft.boards.find((i) => i.board_id == action.board_id);
-        board?.tasks.push({ ...action.task, board_id: action.board_id });
+        board?.tasks.splice(action.index, 0, {
+          ...action.task,
+          board_id: action.board_id,
+          orderno: action.index,
+        });
+        //board?.tasks.push({ ...action.task, board_id: action.board_id });
       });
     case "clear-unsynced":
       return produce(state, (draft) => {

@@ -100,4 +100,16 @@ describe("kanban-reducer", () => {
       expect(state.unSyncedActions.length).toBe(0);
     });
   });
+
+  describe("task actions", () => {
+    describe("task-create", () => {});
+    describe("task-update", () => {});
+    describe("task-delete", () => {});
+    describe("task-move", () => {
+      // all should be the same...
+      // Task-move always: filterout old location,
+      // Update board to new one,
+      // insert to given Index
+    });
+  });
 });

@@ -1,5 +1,6 @@
 import Kanban from "@/app/components/kanban/kanban";
 import { auth } from "@/auth";
+import RESTbackend from "@/lib/backend-api";
 import { Task, BoardTask, userBoards, userTasks } from "@/lib/db";
 
 const getBoards = async (user_id: string): Promise<BoardTask[]> => {

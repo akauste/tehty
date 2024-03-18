@@ -1,9 +1,9 @@
 export const auth = async () => {
   return Promise.resolve({
-    session: {
-      user: {
-        user_id: "test@example.test",
-      },
+    //session: {
+    user: {
+      email: "test@example.test",
     },
+    //},
   });
 };

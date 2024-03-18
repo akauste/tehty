@@ -37,40 +37,22 @@ const TaskList = ({ board_id, list, dispatch }: TaskListProps) => {
     });
   };
 
-  const insertAt = (newTask: Task, atIndex: number) => {
-    dispatch({ type: "insert-task", board_id, newTask, atIndex });
-  };
-
-  const remove = (task_id: number) => {
-    dispatch({ type: "remove-task", board_id, task_id });
-  };
-
-  const updateOrder = async () => {
-    // const res = await fetch('/api/todos', {
-    //   method: 'POST',
-    //   body: JSON.stringify(
-    //     todos.map((t,index) => ({todo_id: t.todo_id, orderno: index}))
-    //   ),
-    // });
-    // const data = await res.json();
-    // console.log('Updated: ', data);
-  };
-
   return (
     <ul className="space-y-2 flex-grow flex flex-col">
       {tasks.map((t) => (
         <TaskItem
           key={t.task_id.toString()}
           task={t}
-          insertAt={insertAt}
-          remove={remove}
           move={move}
           find={find}
           dispatch={dispatch}
-          onDrop={updateOrder}
         />
       ))}
-      <TaskDropzone board_id={board_id} dispatch={dispatch} />
+      <TaskDropzone
+        board_id={board_id}
+        index={tasks.length}
+        dispatch={dispatch}
+      />
     </ul>
   );
 };
