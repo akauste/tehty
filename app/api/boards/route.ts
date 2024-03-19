@@ -1,7 +1,30 @@
-import { NextRequest } from "next/server";
+import { auth } from "@/auth";
+import { NewBoard, createBoard } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  // Implement creating new board here
+  const session = await auth();
+  const user_id = session?.user?.email;
+
+  if (!user_id)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      { status: 401 }
+    );
+
+  console.log("Adding task");
+  const data: NewBoard = await req.json();
+
+  // Add some real validator
+  if (!data.name?.length) {
+    return NextResponse.json({ error: "Invalid data", data }, { status: 400 });
+  }
+  data.user_id = user_id;
+  const newRow = await createBoard(data);
+  console.log(data, newRow);
+  return NextResponse.json({ ...newRow, tasks: [] });
 }
 
 export async function PATCH(req: NextRequest) {

@@ -7,7 +7,6 @@ import { Dispatch, useEffect, useReducer, useState } from "react";
 import { Board, Task } from "@/lib/db";
 import AddBoardButton from "./add-board-button";
 import HiddenBoards from "./hidden-boards";
-import AddTaskModal from "../task/add-task-modal";
 import { KanbanActions, kanbanReducer } from "@/lib/kanban-reducer";
 import { CheckCircleOutline, Sync, Update } from "@mui/icons-material";
 import backend, { IKanbanBackend } from "@/lib/backend-api";
@@ -26,16 +25,53 @@ export default function Kanban({
     boards,
     unSyncedActions,
   });
-  const [syncStatus, setSyncStatus] = useState({ sync: false, error: false });
+  const [syncStatus, setSyncStatus] = useState({ sync: false, error: "" });
 
   const hiddenBoards = state.boards.filter((b) => !b.show);
   const visibleBoards = state.boards.filter((b) => b.show);
 
   const dispatchBackend = (action: KanbanActions) => {
     switch (action.type) {
+      case "add-board":
+        backend
+          .createBoard({
+            ...action.board,
+            user_id,
+            orderno: state.boards.length,
+          })
+          .then((newBoard) =>
+            dispatch({
+              type: "add-board",
+              board: newBoard,
+            })
+          )
+          .catch((err) =>
+            setSyncStatus({ sync: false, error: "Failed to create board" })
+          );
+        break;
+      case "update-board":
+        backend
+          .updateBoard(action.board)
+          //.then((ret) => console.warn(ret))
+          .catch((err) => {
+            if (err) console.warn("Received ERROR: ", err);
+            setSyncStatus({ sync: false, error: "Failed to update board" });
+          });
+        dispatch(action);
+        break;
+      case "delete-board":
+        backend.deleteBoard(action.board_id).catch((err) => {
+          setSyncStatus({
+            sync: false,
+            error: "Failed to delete board, please refresh page",
+          });
+        });
+        dispatch(action);
+        break;
       case "update-task":
         console.warn("dispatchBackend(update-task: ...)");
         backend.updateTask(action.task);
+        dispatch(action);
         break;
       case "append-task":
         //const newTask = await backend.createTask(action.task);
@@ -55,21 +91,33 @@ export default function Kanban({
         task_ids?.splice(action.index, 0, action.task.task_id);
         console.warn("Saving task order (ids): " + task_ids);
         if (task_ids) backend.sortTasks(action.board_id, task_ids);
+        dispatch(action);
+        break;
+      default:
+        dispatch(action);
     }
-    dispatch(action);
   };
 
   console.log("STATE", state);
   return (
     <DndProvider backend={HTML5Backend}>
+      {syncStatus.error && (
+        <div className="bg-red-300 border border-red-700 rounded p-2 text-red-800">
+          <button
+            className="float-right"
+            onClick={() => setSyncStatus((s) => ({ ...s, error: "" }))}
+          >
+            X
+          </button>
+          {syncStatus.error}
+        </div>
+      )}
       <div className="flex w-full my-2 gap-2">
         <h1 className="flex-grow">Kanban test</h1>
-
         <div>
           {syncStatus.sync ? "Syncing" : ""}
           {syncStatus.error ? "Failed to sync" : ""}
         </div>
-
         {hiddenBoards.length > 0 && (
           <HiddenBoards
             hiddenBoards={hiddenBoards}
@@ -87,10 +135,6 @@ export default function Kanban({
           dispatch={dispatchBackend}
         />
         <AddBoardButton user_id={user_id} dispatch={dispatchBackend} />
-        <SyncSorting
-          unSyncedActions={state.unSyncedActions}
-          dispatch={dispatchBackend}
-        />
       </div>
       <BoardList
         user_id={user_id}

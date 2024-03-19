@@ -15,6 +15,10 @@ type AddBoardAction = {
   type: "add-board";
   board: Board;
 };
+type DeleteBoardAction = {
+  type: "delete-board";
+  board_id: number;
+};
 type MoveTaskAction = {
   type: "move-task";
   board_id: number;
@@ -57,6 +61,7 @@ export type KanbanActions =
   | MoveBoardAction
   | UpdateBoardAction
   | AddBoardAction
+  | DeleteBoardAction
   | MoveTaskAction
   //| InsertTaskAction
   | UpdateTaskAction
@@ -119,6 +124,12 @@ export function kanbanReducer(
         //   action: { ...action },
         // });
         draft.boards.push(action.board);
+      });
+    case "delete-board":
+      return produce(state, (draft) => {
+        draft.boards = draft.boards.filter(
+          (b) => b.board_id != action.board_id
+        );
       });
     case "move-task":
       return produce(state, (draft) => {

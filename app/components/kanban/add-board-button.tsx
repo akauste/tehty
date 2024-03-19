@@ -1,5 +1,5 @@
 import { Dispatch, useState } from "react";
-import BoardEdit from "./board-edit";
+import BoardEditor from "./board-editor";
 import { KanbanActions } from "@/lib/kanban-reducer";
 import { Board } from "@/lib/db";
 
@@ -23,18 +23,15 @@ const AddBoardButton = ({
         + Add board
       </button>
       {showEdit && (
-        <BoardEdit
+        <BoardEditor
           board={{
-            board_id: Math.ceil(Math.random() * 10000),
             user_id,
-            orderno: 0,
             name: "",
             background_color: "#94a3b8",
             show: true,
             show_done_tasks: true,
-            tasks: [],
           }}
-          update={addBoard}
+          save={addBoard}
           close={() => setShowEdit(false)}
         />
       )}

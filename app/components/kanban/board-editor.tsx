@@ -1,30 +1,29 @@
 "use client";
-import { Board } from "@/lib/db";
+import { Board, NewBoard } from "@/lib/db";
 import { bgColors } from "./board-item";
 import { useState } from "react";
 import ColorSelector from "../ui/color-selector";
-import { createPortal } from "react-dom";
 import Modal from "../ui/modal";
 
-interface BoardEditProps {
-  board: Board;
-  update: (board: Board) => void;
+interface BoardEditorProps {
+  board: Partial<Board>;
+  save: (board: any) => void;
   close: () => void;
 }
 
-const BoardEdit = ({ board, update, close }: BoardEditProps) => {
+const BoardEdit = ({ board, save, close }: BoardEditorProps) => {
   const [name, setName] = useState(board.name || "");
   const [backgroundColor, setBackgroundColor] = useState(
-    board.background_color || ""
+    board.background_color || bgColors[0]
   );
   const [show, setShow] = useState<boolean>(board.show || true);
   const [showDoneTasks, setShowDoneTasks] = useState<boolean>(
     board.show_done_tasks || true
   );
 
-  const save = (event: React.FormEvent) => {
+  const saveHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    update({
+    save({
       ...board,
       name,
       background_color: backgroundColor,
@@ -36,14 +35,13 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
 
   return (
     <Modal close={close}>
-      <form method="" onSubmit={save} className="p-2 flex flex-col space-y-1">
-        <label>{board.board_id}</label>
+      <form onSubmit={saveHandler} className="p-2 flex flex-col space-y-1">
         <label>Name</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border border-slate-500 rounded w-full"
+          className="border border-slate-500 rounded w-full px-1"
         />
         <label>Color</label>
         <ColorSelector
@@ -78,7 +76,7 @@ const BoardEdit = ({ board, update, close }: BoardEditProps) => {
           <button
             type="submit"
             className="border border-sky-500 bg-sky-200 hover:bg-sky-100 rounded p-1 flex-1"
-            onClick={save}
+            onClick={saveHandler}
           >
             Save
           </button>

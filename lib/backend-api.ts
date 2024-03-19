@@ -23,6 +23,10 @@ interface ITaskBackend {
   sortTasks: (board_id: number, task_ids: number[]) => Promise<number>;
 }
 
+type MakePropertyOptional<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]?: T[P];
+};
+
 export const RESTbackend: IKanbanBackend = {
   getBoard: async (board_id: number) => {
     const ret = await fetch("/api/boards/" + board_id);
@@ -30,17 +34,21 @@ export const RESTbackend: IKanbanBackend = {
     return board;
   },
   createBoard: async (board: NewBoard) => {
+    const create = { ...board };
     const res = await fetch("/api/boards/", {
       method: "POST",
-      body: JSON.stringify(board),
+      body: JSON.stringify(create),
     });
-    const data: Board = await res.json();
+    const data = await res.json();
     return data;
   },
-  updateBoard: async (board: Board) => {
+  updateBoard: async (board: MakePropertyOptional<Board, "tasks">) => {
+    const update = { ...board };
+    delete update.tasks;
+    console.info("UPDATE: ", update);
     const res = await fetch("/api/boards/" + board.board_id, {
       method: "PATCH",
-      body: JSON.stringify(board),
+      body: JSON.stringify(update),
     });
     const data = await res.json();
     return data; // Promise<[number, string]>;

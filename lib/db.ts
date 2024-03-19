@@ -110,7 +110,11 @@ export type TaskUpdate = Updateable<TaskTable>;
 */
 
 export async function createBoard(board: NewBoard) {
-  return db.insertInto("board").values(board).executeTakeFirstOrThrow();
+  return db
+    .insertInto("board")
+    .values(board)
+    .returningAll()
+    .executeTakeFirstOrThrow();
 }
 // export async function getBoard(board_id: Board) {}
 export async function getUserBoard(user_id: string, board_id: number) {
@@ -152,7 +156,7 @@ export async function deleteUserBoard(user_id: string, board_id: number) {
     .where((eb) =>
       eb.and([eb("user_id", "=", user_id), eb("board_id", "=", board_id)])
     )
-    .execute();
+    .executeTakeFirst();
 }
 
 export async function updateBoardOrder(board_ids: number[], user_id: string) {
