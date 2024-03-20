@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { auth } from '../auth';
+import { auth } from "../auth";
 import { DarkMode, LightMode, Logout } from "@mui/icons-material";
 import DarkModeSwitch from "./components/header/dark-mode-switch";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -23,18 +23,24 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-to-b from-gray-200 dark:from-gray-700 to-gray-50 dark:to-gray-900`}>
+      <body
+        className={`${inter.className} bg-gradient-to-b from-gray-200 dark:from-gray-700 to-gray-50 dark:to-gray-900`}
+      >
         <header className="text-gray-900 dark:text-gray-200 border-b border-green-200 dark:border-green-700 p-2 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 flex flex-row">
-          <h1 className="text-green-800 font-bold text-2xl dark:text-green-300 mr-10">Practice app</h1>
+          <h1 className="text-green-800 font-bold text-2xl dark:text-green-300 mr-10">
+            Practice app
+          </h1>
 
           <HeaderMainMenu />
           <div className=" flex-grow"></div>
           <div className="">
-            { session?.user &&
-              <span className="p-2">{ session.user.email }</span>
-            }
-            <a href="/api/auth/signout" className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white text-xs">
-                <Logout /> Sign out</a>
+            {session?.user && <span className="p-2">{session.user.email}</span>}
+            <a
+              href="/api/auth/signout"
+              className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white text-xs"
+            >
+              <Logout /> Sign out
+            </a>
             <DarkModeSwitch />
           </div>
         </header>
