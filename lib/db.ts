@@ -248,8 +248,13 @@ export async function updateTask(task: TaskUpdate) {
     .executeTakeFirstOrThrow();
 }
 
-export async function deleteTask(task_id: number) {
-  // Implement delete
+export async function deleteUserTask(user_id: string, task_id: number) {
+  return db
+    .deleteFrom("task")
+    .where((eb) =>
+      eb.and([eb("user_id", "=", user_id), eb("task_id", "=", task_id)])
+    )
+    .executeTakeFirst();
 }
 
 export async function sortBoardTasks(board_id: number, task_ids: number[]) {

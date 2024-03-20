@@ -166,10 +166,6 @@ export function kanbanReducer(
     //   });
     case "update-task":
       return produce(state, (draft) => {
-        // draft.unSyncedActions.push({
-        //   sync: "update-task",
-        //   action: { ...action },
-        // });
         const board = draft.boards.find(
           (i) => i.board_id === action.task.board_id
         ) as Board;
@@ -179,20 +175,12 @@ export function kanbanReducer(
       });
     case "remove-task":
       return produce(state, (draft) => {
-        // draft.unSyncedActions.push({
-        //   sync: "remove-task",
-        //   action: { ...action },
-        // });
         const board = draft.boards.find((i) => i.board_id == action.board_id);
         if (board)
           board.tasks = board.tasks.filter((t) => t.task_id != action.task_id);
       });
     case "append-task":
       return produce(state, (draft) => {
-        // draft.unSyncedActions.push({
-        //   sync: "append-task",
-        //   action: { ...action },
-        // });
         const board = draft.boards.find((i) => i.board_id == action.board_id);
         board?.tasks.push({ ...action.task, orderno: board.tasks.length });
         console.log("Append:", board);

@@ -93,6 +93,10 @@ export default function Kanban({
         if (task_ids) backend.sortTasks(action.board_id, task_ids);
         dispatch(action);
         break;
+      case "remove-task":
+        backend.deleteTask(action.task_id);
+        dispatch(action);
+        break;
       default:
         dispatch(action);
     }

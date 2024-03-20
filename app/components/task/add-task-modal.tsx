@@ -27,6 +27,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
   const [dueDate, setDueDate] = useState(
     task?.due_date?.toLocaleDateString("en-CA")
   );
+  const [done, setDone] = useState(task?.done ?? false);
 
   const saveTask = (event: React.FormEvent) => {
     console.log("saving...");
@@ -41,7 +42,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
       description,
       background_color: backgroundColor,
       due_date: dueDate ? new Date(dueDate) : null,
-      done: task?.done || false,
+      done,
       //tags: task?.tags || [],
     };
     //if (task?.task_id) data.task_id = task.task_id;
@@ -97,6 +98,15 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
             </select>
           </>
         )}
+        <label>
+          <input
+            type="checkbox"
+            checked={done}
+            onChange={() => setDone((s) => !s)}
+            className="mr-2"
+          />
+          Done
+        </label>
         <div className="flex gap-2">
           <button
             type="reset"

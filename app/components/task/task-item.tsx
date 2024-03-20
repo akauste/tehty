@@ -1,10 +1,12 @@
 "use client";
 import { useDrag, useDrop } from "react-dnd";
 import { NewTask, Task } from "@/lib/db";
-import { Assignment } from "@mui/icons-material";
+import { Assignment, Check, DeleteOutline, Edit } from "@mui/icons-material";
 import { Dispatch, useState } from "react";
 import AddTaskModal from "./add-task-modal";
 import { KanbanActions } from "@/lib/kanban-reducer";
+import DropdownMenu from "../ui/dropdown-menu";
+import MenuItem from "../ui/menuitem";
 
 interface TasksProps {
   task: Task;
@@ -58,12 +60,20 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
     setEditTask(false);
   };
 
+  const deleteHandler = () => {
+    dispatch({
+      type: "remove-task",
+      board_id: task.board_id,
+      task_id: task.task_id,
+    });
+  };
+
   const now = new Date();
   const isLate = task.due_date && task.due_date < now;
   return (
     <li
       ref={(node) => drag(drop(node))}
-      className="border-b border-slate-600 hover:border-red-800 hover:opacity-70"
+      className="border-b border-slate-600 hover:border-slate-700"
     >
       <header
         className="mt-3 bg-slate-400"
@@ -74,17 +84,27 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
           <div
             className={`${
               isLate ? "bg-red-200 text-red-800" : "bg-slate-200"
-            }  float-right border border-slate-500 mt-[-6px] flex gap-2 opacity-80`}
+            }  float-right border border-slate-500 mt-[-6px] flex`}
           >
             {task.due_date && (
               <span>{task.due_date.toLocaleDateString("fi")}</span>
             )}
             <button onClick={() => setEditTask((s) => !s)}>
-              <Assignment
-                fontSize="small"
-                className="float-right hover:text-sky-800"
-              />
+              <Assignment fontSize="small" className="hover:text-sky-800" />
             </button>
+            <DropdownMenu>
+              <MenuItem onClick={() => setEditTask(true)}>
+                <Edit fontSize="small" /> Edit
+              </MenuItem>
+              {!task.done && (
+                <MenuItem onClick={() => updateTask({ ...task, done: true })}>
+                  <Check fontSize="small" /> Mark done
+                </MenuItem>
+              )}
+              <MenuItem onClick={deleteHandler}>
+                <DeleteOutline fontSize="small" /> Delete
+              </MenuItem>
+            </DropdownMenu>
             {editTask ? (
               <AddTaskModal
                 task={task}
@@ -95,14 +115,14 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
           </div>
         </div>
         <h3
-          className="px-1 bold"
+          className={`px-1 bold ${task.done ? "line-through" : null}`}
           style={{ backgroundColor: task.background_color }}
         >
           {task.name}
         </h3>
       </header>
       <section
-        className="bg-slate-300"
+        className={`bg-slate-300 ${task.done ? "line-through" : null}`}
         onClick={() => setClampDescription((s) => !s)}
       >
         {task.description.length > 0 && (

@@ -9,10 +9,16 @@ interface TaskListProps {
   user_id: string;
   list: Task[];
   board_id: number;
+  show_done_tasks: boolean;
   dispatch: Dispatch<KanbanActions>;
 }
 
-const TaskList = ({ board_id, list, dispatch }: TaskListProps) => {
+const TaskList = ({
+  board_id,
+  show_done_tasks,
+  list,
+  dispatch,
+}: TaskListProps) => {
   const tasks = list;
 
   const find = useCallback(
@@ -37,9 +43,11 @@ const TaskList = ({ board_id, list, dispatch }: TaskListProps) => {
     });
   };
 
+  const visibleTasks = show_done_tasks ? tasks : tasks.filter((t) => !t.done);
+
   return (
     <ul className="space-y-2 flex-grow flex flex-col">
-      {tasks.map((t) => (
+      {visibleTasks.map((t) => (
         <TaskItem
           key={t.task_id.toString()}
           task={t}
