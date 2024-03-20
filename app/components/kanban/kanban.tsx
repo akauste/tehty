@@ -128,12 +128,6 @@ export default function Kanban({
             dispatch={dispatchBackend}
           />
         )}
-        <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
-          Action
-        </button>
-        <button className=" px-1 border border-slate-500 rounded hover:bg-slate-200 hover:text-sky-800">
-          Other
-        </button>
         <AddTaskButton
           visibleBoards={visibleBoards}
           dispatch={dispatchBackend}
