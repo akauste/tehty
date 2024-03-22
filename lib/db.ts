@@ -1,5 +1,14 @@
 import { createKysely } from "@vercel/postgres-kysely";
-import { Generated, Selectable, Insertable, Updateable, sql } from "kysely";
+import {
+  Kysely,
+  PostgresDialect,
+  Generated,
+  Selectable,
+  Insertable,
+  Updateable,
+  sql,
+} from "kysely";
+import { Pool } from "pg";
 
 interface Database {
   todo: TodoTable;
@@ -7,7 +16,24 @@ interface Database {
   task: TaskTable;
 }
 
-const db = createKysely<Database>();
+function getDb() {
+  if (!process.env.TESTING) return createKysely<Database>();
+
+  //'postgres://myuser:mypassword@localhost:5432/mydb?sslmode=require'
+  const dialect = new PostgresDialect({
+    pool: new Pool({
+      database: "mydb",
+      host: "localhost",
+      user: "myuser",
+      port: 5432,
+      password: "mypassword",
+      max: 10,
+    }),
+  });
+  return new Kysely<Database>({ dialect });
+}
+
+const db = getDb();
 
 export async function allTodos() {
   return db.selectFrom("todo").selectAll().execute();

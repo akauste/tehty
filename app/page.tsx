@@ -1,13 +1,9 @@
-import { Todo, allTodos, setTodoDone, userTodos } from "@/lib/db";
-import Image from "next/image";
 import { auth } from "../auth";
-import Todoer from "./components/Todoer";
+import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
   const user_id = session?.user?.email as string;
-
-  const todos = await userTodos(user_id);
 
   console.log("Home page here");
 
@@ -29,6 +25,16 @@ export default async function Home() {
           saved to postgres database.
         </li>
       </ol>
+      {!session?.user && (
+        <p className="p-10 text-center">
+          <a
+            href="/api/auth/signin"
+            className="p-4 bg-sky-600 text-sky-100 hover:bg-sky-500 hover:text-white rounded-xl"
+          >
+            Sign in
+          </a>
+        </p>
+      )}
     </>
   );
 }

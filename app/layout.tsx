@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { auth } from "../auth";
-import { DarkMode, LightMode, Logout } from "@mui/icons-material";
+import { DarkMode, LightMode, Login, Logout } from "@mui/icons-material";
 import DarkModeSwitch from "./components/header/dark-mode-switch";
 import Link from "next/link";
 import HeaderMainMenu from "./components/header/main-menu";
@@ -35,12 +35,21 @@ export default async function RootLayout({
           <div className=" flex-grow"></div>
           <div className="">
             {session?.user && <span className="p-2">{session.user.email}</span>}
-            <a
-              href="/api/auth/signout"
-              className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white text-xs"
-            >
-              <Logout /> Sign out
-            </a>
+            {session?.user ? (
+              <Link
+                href="/api/auth/signout"
+                className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white text-xs"
+              >
+                <Logout /> Sign out
+              </Link>
+            ) : (
+              <Link
+                href="/api/auth/signin"
+                className="p-2 m-2 border border-gray-700 rounded-lg bg-gray-600 text-slate-200 hover:text-white text-xs"
+              >
+                <Login /> Sign in
+              </Link>
+            )}
             <DarkModeSwitch />
           </div>
         </header>
