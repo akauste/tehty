@@ -16,7 +16,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: "/((?!api/auth|_next/static|_next/image|favicon.ico).*|(?!/))",
+      source: "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
       //source: '/(.*)',
       missing: [
         { type: "header", key: "next-router-prefetch" },
@@ -31,9 +31,8 @@ export const config = {
 export default auth((req) => {
   // req.auth
 
-  console.log("Authentication should happen", req.auth);
-  if (!req.auth?.user) {
-    console.log("redirect");
+  console.log("Authentication should happen", req.auth, req.nextUrl.pathname);
+  if (!req.auth?.user && req.nextUrl.pathname != "/") {
     return NextResponse.redirect(
       process.env.NEXT_PUBLIC_URL + "/api/auth/signin"
     );
