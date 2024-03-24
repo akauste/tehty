@@ -1,4 +1,4 @@
-import Kanban from "@/app/components/kanban/kanban";
+import Kanban from "@/components/kanban/kanban";
 
 export default function Sub() {
   return (

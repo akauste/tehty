@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { auth } from "../auth";
-import { DarkMode, LightMode, Login, Logout } from "@mui/icons-material";
-import DarkModeSwitch from "./components/header/dark-mode-switch";
+import { Login, Logout } from "@mui/icons-material";
+import DarkModeSwitch from "@/components/header/dark-mode-switch";
 import Link from "next/link";
-import HeaderMainMenu from "./components/header/main-menu";
+import HeaderMainMenu from "@/components/header/main-menu";
 
 const inter = Inter({ subsets: ["latin"] });
 
