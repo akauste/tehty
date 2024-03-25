@@ -11,11 +11,11 @@ export default async function Home() {
   return (
     <>
       <Image
-        src="/decoration.png"
+        src="/images/decoration.png"
         alt=""
         width="300"
         height="300"
-        className="w-1/3 float-right"
+        className="w-1/3 float-right ml-4"
       />
       <h1 className="text-3xl font-bold mb-4">
         Tehty{" "}
