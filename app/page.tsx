@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { auth } from "../auth";
 import Link from "next/link";
 
@@ -9,8 +10,22 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className="text-2xl">Practice app</h1>
-      <p>Practice app has two tools:</p>
+      <Image
+        src="/decoration.png"
+        alt=""
+        width="300"
+        height="300"
+        className="w-1/3 float-right"
+      />
+      <h1 className="text-3xl font-bold mb-4">
+        Tehty{" "}
+        <span className="text-slate-500 font-extralight italic">
+          {" "}
+          &mdash; manage your tasks
+        </span>
+      </h1>
+
+      <h2 className="font-bold">Tehty app has two tools:</h2>
       <ol className="pl-4 py-2 space-y-2 list-decimal">
         <li>
           Todo list is simple a simple todo list where the tasks are simple text

@@ -117,7 +117,7 @@ export default function Kanban({
         </div>
       )}
       <div className="flex w-full my-2 gap-2">
-        <h1 className="flex-grow">Kanban test</h1>
+        <h1 className="flex-grow text-2xl bold">Kanban board</h1>
         <div>
           {syncStatus.sync ? "Syncing" : ""}
           {syncStatus.error ? "Failed to sync" : ""}
