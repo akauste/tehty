@@ -1,14 +1,14 @@
-# Practice app
+# TEHTY app
 
 This is a practice project that implements Kanban board and Todo lists. You can check out the working app at
-[practice-akauste.vercel.app](https://practice-akauste.vercel.app)
+[tehty-akauste.vercel.app](https://tehty-akauste.vercel.app)
 
 ## Usage
 
 App requires you to login (either with github or google account).
 
-After login the main page includes the todo app.
-on Kanban page you can create boards and then add tasks to boards.
+After login there is two apps that you can use. Todo app for managing simple todo list and Kanban app where you
+can create boards and organize tasks via drag and drop.
 
 ## Tech stack
 
