@@ -5,47 +5,12 @@ import { DndProvider, useDrop } from "react-dnd";
 import BoardItem from "./board-item";
 import { KanbanActions } from "@/lib/kanban-reducer";
 
-// const getTodos = async () : Promise<Todo[]> => {
-//   const data = await fetch('/api/todos');
-//   const list : Todo[] = await data.json();
-//   return list;
-// }
-
-// const addTodo = async (todo: NewTodo) : Promise<Todo> => {
-//   const data = await fetch('/api/todo', {
-//     method: 'POST',
-//     body: JSON.stringify(todo),
-//   });
-//   return await data.json();
-// }
-
-// const deleteTodo = async (todo_id: Number) : Promise<Todo> => {
-//   const data = await fetch('/api/todo', {
-//     method: 'DELETE',
-//     body: JSON.stringify({todo_id}),
-//   });
-//   return await data.json();
-// }
-
 const BoardList: React.FC<{
   user_id: string;
   list: BoardTask[];
   dispatch: Dispatch<KanbanActions>;
 }> = ({ user_id, list, dispatch }) => {
   const boards = list;
-  console.log("BoardList boards:", boards);
-  // const updateBoard = (index: number, board: Board) => {
-  //   dispatch({ type: "update-board", index, board });
-  // };
-
-  // const insertTodo = (task: string) => {
-  //   addTodo({ task, user_id, done: false, orderno: null}).then(newTodo => setTodos(old => [...old, newTodo]));
-  // }
-
-  // const removeTodo = (id: Number) => {
-  //   console.log('removing todo item: ', id);
-  //   deleteTodo(id).then(() => setTodos(old => old.filter(i => i.todo_id != id)));
-  // }
 
   const findBoard = (id: number) => {
     const board = boards.filter((b) => b.board_id === id)[0];
@@ -88,7 +53,6 @@ const BoardList: React.FC<{
             dispatch={dispatch}
           />
         ))}
-      {/* <TodoAdd user_id={user_id} addTodo={insertTodo} /> */}
     </ul>
   );
 };

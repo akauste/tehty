@@ -77,8 +77,9 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
           color={backgroundColor}
           setColor={setBackgroundColor}
         />
+        {/* Commented out until actually works
         <label>Tags</label>
-        <input type="text" className="border border-slate-500 rounded" />
+  <input type="text" className="border border-slate-500 rounded" /> */}
         {boards && (
           <>
             <label>Board</label>
