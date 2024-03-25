@@ -10,7 +10,7 @@ import {
 } from "kysely";
 import { Pool } from "pg";
 
-interface Database {
+export interface Database {
   todo: TodoTable;
   board: BoardTable;
   task: TaskTable;
@@ -149,7 +149,8 @@ export async function getUserBoard(user_id: string, board_id: number) {
     .selectAll()
     .where((eb) =>
       eb.and([eb("user_id", "=", user_id), eb("board_id", "=", board_id)])
-    );
+    )
+    .executeTakeFirst();
 }
 
 export async function userBoards(user_id: string) {
@@ -186,14 +187,18 @@ export async function deleteUserBoard(user_id: string, board_id: number) {
 }
 
 export async function updateBoardOrder(board_ids: number[], user_id: string) {
+  const proms: any[] = [];
   board_ids.forEach((id, idx) => {
-    db.updateTable("board")
+    const p = db
+      .updateTable("board")
       .set({ orderno: idx })
       .where((eb) =>
         eb.and([eb("board_id", "=", id), eb("user_id", "=", user_id)])
       )
       .execute();
+    proms.push(p);
   });
+  return Promise.all(proms);
 }
 
 export async function moveToBoardTask(
@@ -244,7 +249,7 @@ export async function addTask(task: NewTask) {
     .where("board_id", "=", task.board_id!)
     .executeTakeFirst();
 
-  task.orderno = res ? res.orderno + 1 : 1;
+  task.orderno = res ? res.orderno + 1 : 0;
 
   return db
     .insertInto("task")
@@ -253,8 +258,14 @@ export async function addTask(task: NewTask) {
     .executeTakeFirstOrThrow();
 }
 
-export async function getTask(task_id: number) {
-  // Implement get
+export async function getUserTask(user_id: string, task_id: number) {
+  return db
+    .selectFrom("task")
+    .selectAll()
+    .where((eb) =>
+      eb.and([eb("user_id", "=", user_id), eb("task_id", "=", task_id)])
+    )
+    .executeTakeFirst();
 }
 
 export async function updateTask(task: TaskUpdate) {
@@ -293,12 +304,14 @@ export async function sortBoardTasks(board_id: number, task_ids: number[]) {
     ) AS in(board_id, orderno, task_id)
     WHERE t.task_id = in.task_id
   */
+  const proms: Promise<any>[] = [];
   task_ids.forEach((task_id, orderno) => {
-    db.updateTable("task")
+    const p = db
+      .updateTable("task")
       .set({ board_id, orderno: orderno })
       .where("task_id", "=", task_id)
       .execute();
+    proms.push(p);
   });
-  // Maybe I should collect the promises, and then wait for all resolved or do everything in a transaction?
-  return task_ids.length;
+  return Promise.all(proms);
 }

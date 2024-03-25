@@ -8,24 +8,16 @@ export default defineConfig({
     alias: {
       "@vercel/postgres-kysely": path.resolve(
         __dirname,
-        "./__mocks__/kysely.ts"
+        "./__mocks__/vercel-postgres-kysely.ts"
       ),
       "@/auth": path.resolve(__dirname, "./__mocks__/auth.ts"),
-      "@/lib/db": path.resolve(__dirname, "./__mocks__/db.ts"),
       "next/server": path.resolve(__dirname, "./node_modules/next/server.js"),
       "@": path.resolve(__dirname, "./"),
     },
   },
   test: {
     environment: "jsdom",
-    exclude: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/cypress/**",
-      "**/.{idea,git,cache,output,temp}/**",
-      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
-      "**/integration/**",
-    ],
+    include: ["**/integration/*.{test,spec}.?(c|m)[jt]s?(x)"],
     deps: {
       optimizer: {
         web: {

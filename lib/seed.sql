@@ -17,7 +17,7 @@ CREATE TABLE board (
     name TEXT,
     background_color TEXT,
     show BOOLEAN,
-    showDoneTasks BOOLEAN,
+    show_done_tasks BOOLEAN,
     CONSTRAINT board_pkey PRIMARY KEY (board_id)
 );
 CREATE INDEX IF NOT EXISTS board_user_order ON board (
