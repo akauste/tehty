@@ -57,6 +57,7 @@ const TaskList = ({
         />
       ))}
       <TaskDropzone
+        key={"dz" + tasks.length}
         board_id={board_id}
         index={tasks.length}
         dispatch={dispatch}

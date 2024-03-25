@@ -20,5 +20,5 @@ export async function PATCH(req: NextRequest, context: { params: Params }) {
 
   const count = await sortBoardTasks(context.params.board_id, task_ids);
   console.log("tried to update: ", count);
-  return NextResponse.json(count);
+  return NextResponse.json(count.toString());
 }
