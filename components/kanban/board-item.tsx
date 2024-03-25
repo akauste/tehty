@@ -37,7 +37,6 @@ interface IBoard {
   remove: (id: number) => void;
   moveBoard: (id: number, to: number) => void;
   findBoard: (id: number) => { index: number };
-  onDrop: () => void;
   dispatch: Dispatch<KanbanActions>;
 }
 
@@ -60,26 +59,12 @@ const BoardItem: React.FC<IBoard> = ({
   remove,
   moveBoard,
   findBoard,
-  onDrop,
   dispatch,
 }) => {
   const [boardEdit, setBoardEdit] = useState(false);
   const toggleBoardEdit = () => setBoardEdit((v) => !v);
 
   const bgColor = board.background_color;
-
-  // const toggleDone = () => {
-  //   fetch('/api/todo', {
-  //     method: 'PATCH',
-
-  //     body: JSON.stringify( t )
-  //   });
-  //   setT(old => ({...old, done: !old.done}));
-  // }
-
-  // const removeThis = () => {
-  //   remove(todo.todo_id)
-  // }
 
   const originalIndex = findBoard(board.board_id).index;
   const [{ isDragging }, drag, dragPreview] = useDrag(
@@ -94,8 +79,6 @@ const BoardItem: React.FC<IBoard> = ({
         const didDrop = monitor.didDrop();
         if (!didDrop) {
           moveBoard(droppedId, originalIndex);
-        } else {
-          onDrop();
         }
       },
     }),

@@ -24,17 +24,6 @@ const BoardList: React.FC<{
     dispatch({ type: "move-board", board_id, atIndex });
   };
 
-  const updateOrder = async () => {
-    // const res = await fetch('/api/todos', {
-    //   method: 'POST',
-    //   body: JSON.stringify(
-    //     todos.map((t,index) => ({todo_id: t.todo_id, orderno: index}))
-    //   ),
-    // });
-    // const data = await res.json();
-    // console.log('Updated: ', data);
-  };
-
   const [, drop] = useDrop(() => ({ accept: "board" }));
 
   return (
@@ -49,7 +38,6 @@ const BoardList: React.FC<{
             remove={() => {} /*removeTodo*/}
             moveBoard={moveBoard}
             findBoard={findBoard}
-            onDrop={updateOrder}
             dispatch={dispatch}
           />
         ))}

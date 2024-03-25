@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { NewBoard, createBoard } from "@/lib/db";
+import { NewBoard, createBoard, updateBoardOrder } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -28,5 +28,19 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  // Implement sorting the boards here
+  const session = await auth();
+  const user_id = session?.user?.email;
+
+  if (!user_id)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      { status: 401 }
+    );
+
+  console.log("Setting new board order");
+  const board_ids: number[] = await req.json();
+  const ret = await updateBoardOrder(board_ids, user_id);
+  return NextResponse.json(ret.toString());
 }

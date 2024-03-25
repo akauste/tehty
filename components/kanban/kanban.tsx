@@ -68,6 +68,16 @@ export default function Kanban({
         });
         dispatch(action);
         break;
+      case "move-board":
+        const board_ids = state.boards
+          .map((b) => b.board_id)
+          .filter((id) => id != action.board_id);
+        board_ids.splice(action.atIndex, 0, action.board_id);
+        backend.sortBoards(board_ids);
+        dispatch(action);
+        break;
+      //case "move-task":
+      //case "clear-unsynced":
       case "update-task":
         console.warn("dispatchBackend(update-task: ...)");
         backend.updateTask(action.task);
