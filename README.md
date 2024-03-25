@@ -22,6 +22,25 @@ The app is written using these tools & techiniques:
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Configuration
+
+Some environment variables are needed:
+
+```bash
+# Postgres url in a format that @vercel/kysely requires
+POSTGRES_URL=...
+# Ie locally: http://localhost:3000
+NEXT_PUBLIC_URL=...
+# Github app configuration for github Oauth provider:
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+# Google Oauth provider config:
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+# Next auth secret:
+AUTH_SECRET=...
+```
+
 ## Testing
 
 ```bash
@@ -34,8 +53,6 @@ npm run integration:test
 ## Getting Started
 
 First, run the development server:
-
-[TODO] Requires configuration instructions to setup vercel postgres db & next-auth
 
 ```bash
 npm run dev
