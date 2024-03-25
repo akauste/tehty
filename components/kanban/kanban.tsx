@@ -86,6 +86,7 @@ export default function Kanban({
       case "append-task":
         //const newTask = await backend.createTask(action.task);
         backend.createTask(action.task).then((newTask) => {
+          if (newTask.due_date) newTask.due_date = new Date(newTask.due_date);
           dispatch({
             type: "append-task",
             board_id: newTask.board_id,
