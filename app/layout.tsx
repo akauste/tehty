@@ -72,11 +72,14 @@ export default async function RootLayout({
             <DarkModeSwitch />
           </div>
         </header>
-        <main className="flex min-h-screen max-w-[800px] flex-col items-center justify-between py-4 mx-auto">
+        <main className="flex min-h-screen max-w-[1200px] flex-col items-center justify-between py-4 mx-auto">
           <div className="z-10 w-full text-sm p-4 bg-white dark:bg-gray-800 shadow-sm shadow-gray-400 dark:shadow-gray-950">
             {children}
           </div>
         </main>
+        <footer className="text-center bg-slate-300 py-1 text-slate-700 dark:bg-slate-800 dark:text-slate-400">
+          &copy; 2024 &mdash; Aku Kauste
+        </footer>
       </body>
     </html>
   );
