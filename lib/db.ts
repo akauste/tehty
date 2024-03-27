@@ -1,6 +1,7 @@
 import { createKysely } from "@vercel/postgres-kysely";
 import {
   Kysely,
+  RawBuilder,
   PostgresDialect,
   Generated,
   Selectable,
@@ -34,6 +35,10 @@ function getDb() {
 }
 
 const db = getDb();
+
+function json<T>(value: T): RawBuilder<T> {
+  return sql`CAST(${JSON.stringify(value)} AS JSONB)`;
+}
 
 export async function allTodos() {
   return db.selectFrom("todo").selectAll().execute();
@@ -115,6 +120,11 @@ export type NewBoard = Insertable<BoardTable>;
 export type BoardUpdate = Updateable<BoardTable>;
 export type BoardTask = Board & { tasks: Task[] };
 
+type Step = {
+  name: string;
+  done: boolean;
+};
+
 export interface TaskTable {
   task_id: Generated<number>;
   board_id: number;
@@ -125,6 +135,7 @@ export interface TaskTable {
   description: string;
   due_date: Date | null;
   done: boolean;
+  steps?: Step[];
 }
 
 export type Task = Selectable<TaskTable>; // & { tags: string[] };
@@ -243,6 +254,9 @@ export async function userTasks(user_id: string) {
 }
 
 export async function addTask(task: NewTask) {
+  if (!task.steps) {
+    task.steps = [];
+  }
   const res = await db
     .selectFrom("task")
     .select(({ fn, val, ref }) => [fn.max<number>("orderno").as("orderno")])
@@ -253,7 +267,7 @@ export async function addTask(task: NewTask) {
 
   return db
     .insertInto("task")
-    .values({ ...task })
+    .values({ ...task, steps: json(task.steps) })
     .returningAll()
     .executeTakeFirstOrThrow();
 }
@@ -274,7 +288,7 @@ export async function updateTask(task: TaskUpdate) {
   // Implement update
   return db
     .updateTable("task")
-    .set({ ...task })
+    .set({ ...task, steps: json(task.steps) }) // Possible problem: steps not included in update query, but they exist
     .where((eb) =>
       eb.and([
         eb("task_id", "=", task.task_id as number),

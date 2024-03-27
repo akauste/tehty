@@ -48,8 +48,13 @@ describe("kanban board tasks, happy path", () => {
         description: "Description of the first task",
         background_color: "blue",
         done: false,
+        steps: [
+          { name: "Step 1", done: true },
+          { name: "Other step", done: false },
+        ],
       });
       expect(task.task_id).toBeGreaterThan(0);
+      expect(task.steps?.length).toBe(2);
       allTasks.push(task);
     });
 
@@ -85,12 +90,16 @@ describe("kanban board tasks, happy path", () => {
         name: "Updated task",
         description: "Long description",
         done: true,
+        steps: [{ name: "Only one", done: true }],
       });
       expect(updated.name).toBe("Updated task");
       expect(updated.description).toBe("Long description");
       expect(updated.done).toBe(true);
       expect(updated.board_id).toBe(task.board_id);
       expect(updated.orderno).toBe(task.orderno);
+      expect(task.steps?.length).toBe(0);
+      expect(updated.steps?.length).toBe(1);
+      expect(updated.steps![0].done).toBe(true);
     });
 
     test("sortBoardTasks(...), reverse order", async () => {

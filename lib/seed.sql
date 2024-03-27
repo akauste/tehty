@@ -42,6 +42,7 @@ CREATE TABLE task (
     description TEXT,
     due_date DATE,
     done BOOLEAN,
+    steps JSONB default '[]',
     CONSTRAINT task_pkey PRIMARY KEY (task_id)
 );
 CREATE INDEX IF NOT EXISTS task_by_board ON board (

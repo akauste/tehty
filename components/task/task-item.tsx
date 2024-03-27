@@ -133,6 +133,13 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
         {/*task.tags.length > 0 && (
           <p className="text-sky-600 p-1 text-xs">{task.tags.join(", ")}</p>
         )*/}
+        {task.steps!.length > 0 && (
+          <progress
+            value={task.steps!.reduce((val, s) => (s.done ? val + 1 : val), 0)}
+            max={task.steps!.length}
+            className="w-full h-2"
+          ></progress>
+        )}
       </section>
     </li>
   );

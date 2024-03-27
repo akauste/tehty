@@ -7,7 +7,7 @@ test("Page", async () => {
   // https://github.com/testing-library/react-testing-library/issues/1209#issuecomment-1546980195
   render(await Page());
   expect(
-    screen.getByRole("heading", { level: 2, name: "Kanban" })
+    screen.getByRole("heading", { level: 1, name: "Kanban board" })
   ).toBeDefined();
-  expect(screen.getByRole("heading", { name: "Kanban test" })).toBeDefined();
+  expect(screen.getByRole("heading", { name: "Kanban board" })).toBeDefined();
 });

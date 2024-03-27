@@ -1,10 +1,10 @@
 "use client";
 import { Board, NewTask, Task } from "@/lib/db";
 import { useState } from "react";
-import { createPortal } from "react-dom";
 import { bgColors } from "../kanban/board-item";
 import ColorSelector from "../ui/color-selector";
 import Modal from "../ui/modal";
+import Steps, { Step } from "./steps/steps";
 
 interface AddTaskModalProps {
   boards?: Board[];
@@ -14,6 +14,13 @@ interface AddTaskModalProps {
   save: (task: any) => void;
   close: () => void;
 }
+
+const initSteps = [
+  { name: "Step 1 (done)", done: true },
+  { name: "Step 2 (not done)", done: false },
+  { name: "Step 3", done: false },
+  { name: "Step 4", done: false },
+];
 
 const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
   const [name, setName] = useState(task?.name || "");
@@ -28,6 +35,9 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
     task?.due_date?.toLocaleDateString("en-CA")
   );
   const [done, setDone] = useState(task?.done ?? false);
+  const [steps, setSteps] = useState(
+    task.steps?.map((s, idx) => ({ ...s, idx })) || []
+  );
 
   const saveTask = (event: React.FormEvent) => {
     console.log("saving...");
@@ -36,16 +46,14 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
     const data: Partial<Task> = {
       ...task,
       board_id: boardId as number,
-      //orderno: task?.orderno || null,
-      //user_id: "testuser",
       name,
       description,
       background_color: backgroundColor,
       due_date: dueDate ? new Date(dueDate) : null,
       done,
+      steps: steps.filter((s) => s.name.length > 0),
       //tags: task?.tags || [],
     };
-    //if (task?.task_id) data.task_id = task.task_id;
     save(data);
   };
   return (
@@ -71,6 +79,7 @@ const AddTaskModal = ({ boards, task, save, close }: AddTaskModalProps) => {
           onChange={(e) => setDueDate(e.target.value)}
           className="border border-slate-500 rounded"
         />
+        <Steps steps={steps} setSteps={setSteps} />
         <label>Background color</label>
         <ColorSelector
           colors={bgColors}

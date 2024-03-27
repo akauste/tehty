@@ -23,5 +23,5 @@ export default async function KanbanPage() {
   const boards = await getBoards(user_id);
   console.log(boards);
 
-  return <Kanban user_id="testuser" boards={boards} />;
+  return <Kanban user_id={user_id} boards={boards} />;
 }
