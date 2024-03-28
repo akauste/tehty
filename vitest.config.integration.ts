@@ -6,12 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@vercel/postgres-kysely": path.resolve(
-        __dirname,
-        "./__mocks__/vercel-postgres-kysely.ts"
-      ),
       "@/auth": path.resolve(__dirname, "./__mocks__/auth.ts"),
-      "next/server": path.resolve(__dirname, "./node_modules/next/server.js"),
+      //"next/server": path.resolve(__dirname, "./node_modules/next/server.js"),
       "@": path.resolve(__dirname, "./"),
     },
   },
@@ -26,6 +22,9 @@ export default defineConfig({
           enabled: false,
         },
       },
+    },
+    env: {
+      TEST_VAR: "Jippijaijee",
     },
   },
 });

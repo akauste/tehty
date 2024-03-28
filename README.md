@@ -27,10 +27,22 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 Some environment variables are needed:
 
 ```bash
-# Postgres url in a format that @vercel/kysely requires
+# You can use postgres database directly or vercel postgres
+# 1: Using regular postgres connection set these variables (you can use docker container, with defaults and
+# zero configuration is needed)
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=mydb
+# 2: Postgres url in a format that @vercel/kysely requires, running in vercel requires just the POSTGRES_URL:
+VERCEL_ENV=true
 POSTGRES_URL=...
+
 # Ie locally: http://localhost:3000
 NEXT_PUBLIC_URL=...
+
+# To set up the authentication you need to configure:
 # Github app configuration for github Oauth provider:
 GITHUB_CLIENT_ID=...
 GITHUB_CLIENT_SECRET=...

@@ -1,8 +1,6 @@
 import { createKysely } from "@vercel/postgres-kysely";
 import { describe, test, vi, expect } from "vitest";
-import { Database, allTodos } from "@/lib/db";
-
-const db = createKysely<Database>();
+import { db, allTodos } from "@/lib/db";
 
 test("allTodos()", async () => {
   const todos = await allTodos();

@@ -17,24 +17,20 @@ export interface Database {
   task: TaskTable;
 }
 
-function getDb() {
-  if (!process.env.TESTING) return createKysely<Database>();
-
-  //'postgres://myuser:mypassword@localhost:5432/mydb?sslmode=require'
-  const dialect = new PostgresDialect({
-    pool: new Pool({
-      database: "mydb",
-      host: "localhost",
-      user: "myuser",
-      port: 5432,
-      password: "mypassword",
-      max: 10,
-    }),
-  });
-  return new Kysely<Database>({ dialect });
-}
-
-const db = getDb();
+export const db = !process.env.VERCEL_ENV
+  ? new Kysely<Database>({
+      dialect: new PostgresDialect({
+        pool: new Pool({
+          database: "mydb",
+          host: "localhost",
+          user: "myuser",
+          port: 5432,
+          password: "mypassword",
+          max: 10,
+        }),
+      }),
+    })
+  : createKysely<Database>();
 
 function json<T>(value: T): RawBuilder<T> {
   return sql`CAST(${JSON.stringify(value)} AS JSONB)`;

@@ -133,6 +133,9 @@ describe("kanban board tasks, happy path", () => {
       expect(moved.board_id).not.toBe(firstTask.board_id);
     });
 
+    test("ENV", () => {
+      expect(process.env.TEST_VAR).toBe("Jippijaijee");
+    });
     /* Rethinking this, this check should probably be done in the api-route
     test("addTask(...), add task to a board that does not exist", async () => {
       expect(async () => {

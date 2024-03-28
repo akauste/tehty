@@ -35,5 +35,12 @@ export default defineConfig({
         },
       },
     },
+    env: {
+      VERCEL_ENV: "true",
+      POSTGRES_URL: "Dummy",
+    },
+    coverage: {
+      reporter: ["text"], // 'json', 'html'
+    },
   },
 });

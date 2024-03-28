@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "integration:test": "docker-compose up -d && vitest run --config ./vitest.config.integration.ts && docker-compose down"
+    "coverage": "vitest run --coverage",
+    "integration:test": "docker-compose up -d && vitest run --config ./vitest.config.integration.ts && docker-compose down",
+    "integration:coverage": "docker-compose up -d && vitest run --config ./vitest.config.integration.ts --coverage && docker-compose down"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -29,6 +31,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.4.0",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.1",

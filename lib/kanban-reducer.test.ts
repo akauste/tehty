@@ -101,6 +101,7 @@ describe("kanban-reducer", () => {
     });
   });
 
+  /*
   describe("task actions", () => {
     describe("task-create", () => {});
     describe("task-update", () => {});
@@ -112,4 +113,5 @@ describe("kanban-reducer", () => {
       // insert to given Index
     });
   });
+  */
 });
