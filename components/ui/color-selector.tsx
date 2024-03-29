@@ -11,6 +11,7 @@ const ColorSelector = ({ colors, color, setColor }: ColorSelectorProps) => {
       {colors.map((c) => (
         <button
           key={c}
+          title={c}
           className="w-4 h-4 hover:opacity-50"
           onClick={(e) => {
             e.preventDefault();
