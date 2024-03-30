@@ -76,7 +76,7 @@ const Steps = ({ steps, setSteps }: StepsProps) => {
     ]);
     setNextIdx((i) => i + 1);
     setTimeout(() => {
-      itemsRef?.current![id].focus();
+      itemsRef?.current![id]?.focus();
     }, 3);
   };
 

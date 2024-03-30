@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { render, fireEvent, screen } from "@testing-library/react";
-import StepItem from "./step-item";
-import { beforeEach } from "node:test";
+import StepItem from "../step-item";
 
 describe("<StepItem ... />", () => {
   let name = "First Item";
