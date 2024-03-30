@@ -1,7 +1,7 @@
 import { Todo, allTodos, setTodoDone, userTodos } from "@/lib/db";
 import Image from "next/image";
 import { auth } from "@/auth";
-import Todoer from "@/components/Todoer";
+import Todoer from "@/components/todo/Todoer";
 
 export default async function Home() {
   const session = await auth();
