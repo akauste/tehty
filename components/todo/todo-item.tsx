@@ -26,9 +26,8 @@ const TodoItem: React.FC<ITodo> = ({
   }, [todo]);
 
   const toggleDone = () => {
-    fetch("/api/todo", {
+    fetch("/api/todos/" + todo.todo_id, {
       method: "PATCH",
-
       body: JSON.stringify(t),
     });
     setT((old) => ({ ...old, done: !old.done }));
@@ -48,7 +47,6 @@ const TodoItem: React.FC<ITodo> = ({
       }),
       end: (item, monitor) => {
         const { id: droppedId, originalIndex } = item;
-        //console.log(droppedId, originalIndex);
         const didDrop = monitor.didDrop();
         if (!didDrop) {
           moveTodo(droppedId, originalIndex);

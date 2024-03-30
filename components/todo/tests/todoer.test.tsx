@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import { afterAll, afterEach, beforeAll, describe, test, vi } from "vitest";
 import Todoer from "../Todoer";
 import { expect } from "vitest";
@@ -77,6 +83,28 @@ describe("<Todoer ... />", () => {
     expect(mockedFetch).toBeCalledTimes(1);
   });
 
+  test("delete middle one", async () => {
+    const todos = createTodos();
+    render(<Todoer user_id="testsuite" todos={todos} />);
+
+    fetchResponse = { removed: todos[1].todo_id };
+    const mockedFetch = vi.fn(mockedResponse);
+    global.fetch = mockedFetch;
+
+    const deleteButtons = screen.getAllByLabelText("Remove");
+    expect(deleteButtons.length).toBe(3); // 3 rows
+    fireEvent.click(deleteButtons[1]);
+
+    expect(mockedFetch).toBeCalledTimes(1);
+    expect(mockedFetch.mock.calls[0][0]).toBe("/api/todos/" + todos[1].todo_id);
+    expect(mockedFetch.mock.calls[0][1]?.method).toBe("DELETE");
+
+    // Wait for new element to appear:
+    await waitForElementToBeRemoved(() => screen.queryByText(todos[1].task));
+    const items = await screen.findAllByRole("listitem");
+    expect(items.length).toBe(2);
+  });
+
   test("with three tasks", () => {
     const todos: Todo[] = createTodos();
 
@@ -153,7 +181,7 @@ describe("<Todoer ... />", () => {
 
     expect(mockedFetch).toBeCalledTimes(1);
     const call = mockedFetch.mock.calls[0];
-    expect(call[0]).toBe("/api/todo"); // Change this to /api/todos/:id
+    expect(call[0]).toBe("/api/todos/" + todos[0].todo_id);
     expect(call[1]?.method).toBe("PATCH");
   });
 });

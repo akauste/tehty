@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { useDrop } from "react-dnd";
 
 const addTodo = async (todo: NewTodo): Promise<Todo> => {
-  const data = await fetch("/api/todo", {
+  const data = await fetch("/api/todos", {
     method: "POST",
     body: JSON.stringify(todo),
   });
@@ -14,9 +14,8 @@ const addTodo = async (todo: NewTodo): Promise<Todo> => {
 };
 
 const deleteTodo = async (todo_id: Number): Promise<Todo> => {
-  const data = await fetch("/api/todo", {
+  const data = await fetch("/api/todos/" + todo_id, {
     method: "DELETE",
-    body: JSON.stringify({ todo_id }),
   });
   return await data.json();
 };
@@ -66,7 +65,7 @@ const TodoList: React.FC<{ user_id: string; list: Todo[] }> = ({
 
   const updateOrder = async () => {
     const res = await fetch("/api/todos", {
-      method: "POST",
+      method: "PATCH",
       body: JSON.stringify(
         todos.map((t, index) => ({ todo_id: t.todo_id, orderno: index }))
       ),

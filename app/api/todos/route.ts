@@ -1,4 +1,4 @@
-import { Todo, setTodoOrder } from "@/lib/db";
+import { Todo, addTodo, setTodoOrder } from "@/lib/db";
 import { auth } from "@/auth";
 import { allTodos, userTodos } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -20,8 +20,18 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(todos);
 }
 
+// Add new todo:
 export async function POST(req: NextRequest) {
-  console.log("POST todos");
+  console.log("Adding todo");
+  const data = await req.json();
+  const newRow = await addTodo(data);
+  console.log(data, newRow);
+  return NextResponse.json({ ...data, todo_id: newRow.todo_id });
+}
+
+// Update order for todos:
+export async function PATCH(req: NextRequest) {
+  console.log("PATCH todos");
   const session = await auth();
   const user_id = session?.user?.email;
 

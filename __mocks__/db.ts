@@ -41,3 +41,11 @@ export const updateTask = async (task: Task) => {
   const ret = { ...task };
   return Promise.resolve(ret);
 };
+
+export const userTodos = async (user_id: string) => {
+  return [
+    { orderno: 0, todo_id: 321, task: "First", done: false, user_id },
+    { orderno: 0, todo_id: 12, task: "Second", done: true, user_id },
+    { orderno: 0, todo_id: 1000, task: "Third", done: false, user_id },
+  ];
+};
