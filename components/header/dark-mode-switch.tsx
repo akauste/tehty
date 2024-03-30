@@ -17,6 +17,7 @@ const DarkModeSwitch = () => {
     darkModeMediaQuery.addEventListener("change", handleDarkModeChange);
 
     if (darkModeMediaQuery.matches) {
+      document.documentElement.classList.add("dark");
       document.documentElement.style.setProperty("color-scheme", "dark");
       setDarkMode(true);
     }
@@ -39,11 +40,14 @@ const DarkModeSwitch = () => {
   };
 
   return (
-    <button className="bg-gray-600 dark:bg-gray-900 p-1 rounded-lg text-xs">
+    <button
+      className="bg-gray-600 dark:bg-gray-900 p-1 rounded-lg text-xs"
+      onClick={isDarkMode ? lightMode : darkMode}
+    >
       {isDarkMode ? (
-        <DarkMode htmlColor="yellow" onClick={lightMode} />
+        <DarkMode htmlColor="yellow" />
       ) : (
-        <LightMode htmlColor="yellow" onClick={darkMode} />
+        <LightMode htmlColor="yellow" />
       )}
     </button>
   );
