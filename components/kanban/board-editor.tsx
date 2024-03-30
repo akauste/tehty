@@ -36,8 +36,9 @@ const BoardEdit = ({ board, save, close }: BoardEditorProps) => {
   return (
     <Modal close={close}>
       <form onSubmit={saveHandler} className="p-2 flex flex-col space-y-1">
-        <label>Name</label>
+        <label htmlFor="name">Name</label>
         <input
+          name="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
