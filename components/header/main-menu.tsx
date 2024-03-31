@@ -1,7 +1,5 @@
 "use client";
 import {
-  Home,
-  HomeMaxOutlined,
   HomeOutlined,
   InfoOutlined,
   TaskOutlined,
