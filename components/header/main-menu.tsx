@@ -1,5 +1,6 @@
 "use client";
 import {
+  HelpOutlined,
   HomeOutlined,
   InfoOutlined,
   TaskOutlined,
@@ -47,13 +48,13 @@ export default function HeaderMainMenu() {
       </li>
       <li>
         <Link
-          href="/info"
+          href="/help"
           className={`${
             path.match("/info") && "font-bold"
           } hover:text-green-800 dark:hover:text-slate-300`}
         >
-          <InfoOutlined fontSize="small" className="mr-1" />
-          Info
+          <HelpOutlined fontSize="small" className="mr-1" />
+          Help
         </Link>
       </li>
     </ul>
