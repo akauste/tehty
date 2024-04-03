@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { moveToBoardTask, sortBoardTasks } from "@/lib/db";
+import { sortBoardTasks } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 type Params = {

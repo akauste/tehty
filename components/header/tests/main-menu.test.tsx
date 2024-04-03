@@ -6,7 +6,7 @@ const items = [
   { path: "/", name: "Home" },
   { path: "/kanban", name: "Kanban" },
   { path: "/todo", name: "Todo" },
-  { path: "/info", name: "Info" },
+  { path: "/help", name: "Help" },
 ];
 let activePath: string;
 vi.mock("next/navigation", (): any => {

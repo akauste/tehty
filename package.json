@@ -10,7 +10,9 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "integration:test": "docker-compose up -d && vitest run --config ./vitest.config.integration.ts && docker-compose down",
-    "integration:coverage": "docker-compose up -d && vitest run --config ./vitest.config.integration.ts --coverage && docker-compose down"
+    "integration:coverage": "docker-compose up -d && vitest run --config ./vitest.config.integration.ts --coverage && docker-compose down",
+    "full:test": "docker-compose down && docker-compose up -d && vitest run --config ./vitest.config.all.ts && docker-compose down",
+    "full:coverage": "docker-compose down && docker-compose up -d && vitest run --config ./vitest.config.all.ts --coverage && docker-compose down"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -36,6 +38,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.1",
     "jsdom": "^24.0.0",
+    "next-test-api-route-handler": "^4.0.5",
     "pg": "^8.11.3",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",

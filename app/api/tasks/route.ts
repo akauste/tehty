@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ ping: "pong" });
 }
 
+// Add new task: POST /api/tasks
 export async function POST(req: NextRequest) {
   const session = await auth();
   const user_id = session?.user?.email;

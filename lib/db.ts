@@ -143,9 +143,16 @@ export type TaskUpdate = Updateable<TaskTable>;
 */
 
 export async function createBoard(board: NewBoard) {
+  let res = await db
+    .selectFrom("board")
+    .select(({ fn }) => [fn.max<number>("orderno").as("orderno")])
+    .where("user_id", "=", board.user_id)
+    .executeTakeFirst();
+  const orderno = res && res.orderno !== null ? res?.orderno + 1 : 0;
+
   return db
     .insertInto("board")
-    .values(board)
+    .values({ ...board, orderno })
     .returningAll()
     .executeTakeFirstOrThrow();
 }

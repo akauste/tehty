@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, context: { params: Params }) {
   if (!user_id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  console.log("PATCH /api/task/" + context.params.task_id);
+  console.log("GET /api/tasks/" + context.params.task_id);
   return NextResponse.json({ error: "Not implemented" }, { status: 501 });
 }
 
