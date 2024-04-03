@@ -50,7 +50,7 @@ export default function HeaderMainMenu() {
         <Link
           href="/help"
           className={`${
-            path.match("/info") && "font-bold"
+            path.match("/help") && "font-bold"
           } hover:text-green-800 dark:hover:text-slate-300`}
         >
           <HelpOutlined fontSize="small" className="mr-1" />
