@@ -145,11 +145,25 @@ export default function Kanban({
         />
         <AddBoardButton user_id={user_id} dispatch={dispatchBackend} />
       </div>
-      <BoardList
-        user_id={user_id}
-        list={state.boards}
-        dispatch={dispatchBackend}
-      />
+      {state.boards.length ? (
+        <BoardList
+          user_id={user_id}
+          list={state.boards}
+          dispatch={dispatchBackend}
+        />
+      ) : (
+        <section className="space-y-2">
+          <p>You don't have any boards added yet.</p>
+          <p>
+            Start by creating some boards with "Add board" button. You can sort
+            the boards with drag and drop.
+          </p>
+          <p>
+            Then you can start adding tasks. Tasks can be dragged around to
+            reorder them and to move them to other boards.
+          </p>
+        </section>
+      )}
       <br />
     </DndProvider>
   );

@@ -27,10 +27,10 @@ CREATE INDEX IF NOT EXISTS board_user_order ON board (
 INSERT INTO board 
     (orderno, user_id, name, background_color, show, show_done_tasks)
 VALUES 
-    (1, 'aku.kauste@gmail.com', 'Planned', '#94a3b8', true, true),
-    (2, 'aku.kauste@gmail.com', 'Active', '#60a5fa', true, true),
-    (3, 'aku.kauste@gmail.com', 'Testing', '#fbbf24', true, true),
-    (4, 'aku.kauste@gmail.com', 'Done', '#a3e635', true, true);
+    (1, 'demouser', 'Planned', '#94a3b8', true, true),
+    (2, 'demouser', 'Active', '#60a5fa', true, true),
+    (3, 'demouser', 'Testing', '#fbbf24', true, true),
+    (4, 'demouser', 'Done', '#a3e635', true, true);
 
 CREATE TABLE task (
     task_id SERIAL,
