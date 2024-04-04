@@ -153,7 +153,7 @@ export default function Kanban({
         />
       ) : (
         <section className="space-y-2">
-          <p>You don't have any boards added yet.</p>
+          <p>You don&apos;t have any boards added yet.</p>
           <p>
             Start by creating some boards with "Add board" button. You can sort
             the boards with drag and drop.
