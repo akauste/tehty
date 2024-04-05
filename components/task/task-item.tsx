@@ -1,7 +1,15 @@
 "use client";
 import { useDrag, useDrop } from "react-dnd";
 import { NewTask, Task } from "@/lib/db";
-import { Assignment, Check, DeleteOutline, Edit } from "@mui/icons-material";
+import {
+  Assignment,
+  Check,
+  CheckBoxOutlineBlank,
+  DeleteOutline,
+  Edit,
+  Expand,
+  MinimizeOutlined,
+} from "@mui/icons-material";
 import { Dispatch, useState } from "react";
 import AddTaskModal from "./add-task-modal";
 import { KanbanActions } from "@/lib/kanban-reducer";
@@ -98,10 +106,24 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
               <Assignment fontSize="small" className="hover:text-sky-800" />
             </button>
             <DropdownMenu>
+              {clampDescription ? (
+                <MenuItem onClick={() => setClampDescription(false)}>
+                  <Expand fontSize="small" /> Show full task
+                </MenuItem>
+              ) : (
+                <MenuItem onClick={() => setClampDescription(true)}>
+                  <MinimizeOutlined fontSize="small" /> Minimize task
+                </MenuItem>
+              )}
+
               <MenuItem onClick={() => setEditTask(true)}>
                 <Edit fontSize="small" /> Edit
               </MenuItem>
-              {!task.done && (
+              {task.done ? (
+                <MenuItem onClick={() => updateTask({ ...task, done: false })}>
+                  <CheckBoxOutlineBlank fontSize="small" /> Mark not done
+                </MenuItem>
+              ) : (
                 <MenuItem onClick={() => updateTask({ ...task, done: true })}>
                   <Check fontSize="small" /> Mark done
                 </MenuItem>
