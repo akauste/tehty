@@ -52,6 +52,10 @@ type AppendRemoveTaskAction = {
   index: number;
   task: Task;
 };
+type ReplaceBoards = {
+  type: "replace-boards";
+  boards: Board[];
+};
 type ClearUnsyncedAction = {
   type: "clear-unsynced";
   cutLength: number;
@@ -68,6 +72,7 @@ export type KanbanActions =
   | RemoveTaskAction
   | AppendTaskAction
   | AppendRemoveTaskAction
+  | ReplaceBoards
   | ClearUnsyncedAction;
 
 type SyncBoardOrder = {
@@ -206,6 +211,17 @@ export function kanbanReducer(
           orderno: action.index,
         });
         //board?.tasks.push({ ...action.task, board_id: action.board_id });
+      });
+    case "replace-boards":
+      return produce(state, (draft) => {
+        draft.boards = action.boards.map((b: Board) => ({
+          ...b,
+          tasks: b.tasks.map((t: Task) => ({
+            ...t,
+            due_date: t.due_date ? new Date(t.due_date) : null,
+          })),
+        }));
+        return draft;
       });
     case "clear-unsynced":
       return produce(state, (draft) => {

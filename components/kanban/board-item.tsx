@@ -7,21 +7,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { Board, Task } from "@/lib/db";
 import {
   Edit,
-  Add,
-  EditTwoTone,
-  Settings,
-  DragHandle,
-  DragHandleOutlined,
-  DragHandleTwoTone,
-  Details,
-  DetailsTwoTone,
-  OpenInFull,
-  Assignment,
-  More,
-  MoreVert,
-  Delete,
   DeleteOutline,
-  VisibilityOff,
   VisibilityOffOutlined,
   VisibilityOutlined,
 } from "@mui/icons-material";
@@ -30,6 +16,7 @@ import TaskList from "../task/task-list";
 import { KanbanActions } from "@/lib/kanban-reducer";
 import DropdownMenu from "../ui/dropdown-menu";
 import MenuItem from "../ui/menuitem";
+import { Colors } from "../ui/color-selector";
 
 interface IBoard {
   board: Board;
@@ -41,16 +28,16 @@ interface IBoard {
 }
 
 export const bgColors = [
-  "#94a3b8", // slate-400
-  "#f87171", // red-400
-  "#fbbf24", // amber-400
-  "#a3e635", // lime-400
-  "#34d399", // emerald-400
-  "#22d3ee", // cyan-400
-  "#60a5fa", // blue-400
-  "#a78bfa", // violet-400
-  "#e879f9", // fuchsia-400
-  "#fb7185", // rose-400
+  Colors.Slate,
+  Colors.Red,
+  Colors.Amber,
+  Colors.Lime,
+  Colors.Emerald,
+  Colors.Cyan,
+  Colors.Blue,
+  Colors.Violet,
+  Colors.Fuchsia,
+  Colors.Rose,
 ];
 
 const BoardItem: React.FC<IBoard> = ({

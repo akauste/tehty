@@ -11,6 +11,7 @@ import { KanbanActions, kanbanReducer } from "@/lib/kanban-reducer";
 import { CheckCircleOutline, Sync, Update } from "@mui/icons-material";
 import backend, { IKanbanBackend } from "@/lib/backend-api";
 import AddTaskButton from "./add-task-button";
+import AddExampleData from "./add-example-data";
 
 const unSyncedActions: any[] = [];
 
@@ -145,14 +146,28 @@ export default function Kanban({
         />
         <AddBoardButton user_id={user_id} dispatch={dispatchBackend} />
       </div>
-      {state.boards.length ? (
+      {visibleBoards.length ? (
         <BoardList
           user_id={user_id}
           list={state.boards}
           dispatch={dispatchBackend}
         />
+      ) : hiddenBoards.length ? (
+        <section className="space-y-2 bg-yellow-50 p-4 border border-yellow-600 rounded-md">
+          <h2 className="text-xl font-medium text-yellow-800">
+            All boards are hidden
+          </h2>
+          <p>
+            Click the hidden boards button to list them and then click the board
+            name to show it again.
+          </p>
+          <p>You can also click add board button to add new boards.</p>
+        </section>
       ) : (
-        <section className="space-y-2">
+        <section className="space-y-2 bg-sky-50 p-4 border border-sky-600 rounded-md">
+          <h2 className="text-xl font-medium text-sky-800">
+            Welcome to Tehty kanban boards
+          </h2>
           <p>You don&apos;t have any boards added yet.</p>
           <p>
             Start by creating some boards with &quot;Add board&quot; button. You
@@ -162,6 +177,11 @@ export default function Kanban({
             Then you can start adding tasks. Tasks can be dragged around to
             reorder them and to move them to other boards.
           </p>
+          <p>
+            Press the create example button below to create four boards and a
+            few example tasks.
+          </p>
+          <AddExampleData dispatch={dispatch} />
         </section>
       )}
       <br />
