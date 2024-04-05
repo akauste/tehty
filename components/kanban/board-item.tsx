@@ -20,8 +20,6 @@ import { Colors } from "../ui/color-selector";
 
 interface IBoard {
   board: Board;
-  update: (board: Board) => void;
-  remove: (id: number) => void;
   moveBoard: (id: number, to: number) => void;
   findBoard: (id: number) => { index: number };
   dispatch: Dispatch<KanbanActions>;
@@ -42,8 +40,6 @@ export const bgColors = [
 
 const BoardItem: React.FC<IBoard> = ({
   board,
-  update,
-  remove,
   moveBoard,
   findBoard,
   dispatch,

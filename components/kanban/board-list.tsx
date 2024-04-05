@@ -34,8 +34,6 @@ const BoardList: React.FC<{
           <BoardItem
             key={i}
             board={b}
-            update={(board) => {} /*updateBoard(i, board)*/}
-            remove={() => {} /*removeTodo*/}
             moveBoard={moveBoard}
             findBoard={findBoard}
             dispatch={dispatch}

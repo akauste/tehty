@@ -114,7 +114,6 @@ export default function Kanban({
     }
   };
 
-  console.log("STATE", state);
   return (
     <DndProvider backend={HTML5Backend}>
       {syncStatus.error && (
