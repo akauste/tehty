@@ -3,7 +3,7 @@
   to allow easy implementation of different backends ie (REST-API & localStorage)
 */
 
-import { Board, NewBoard, NewTask, Task } from "@/lib/db";
+import { Board, NewBoard, NewTask, Task } from "@/lib/types";
 
 export type IKanbanBackend = IBoardBackend & ITaskBackend;
 
