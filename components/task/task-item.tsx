@@ -19,6 +19,11 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
   const [editTask, setEditTask] = useState(false);
   const originalIndex = find(task.task_id).index;
   const [clampDescription, setClampDescription] = useState(true);
+
+  const visibleSteps = clampDescription
+    ? task.steps?.filter((s) => !s.done) || []
+    : task.steps || [];
+
   const [{ isDragging }, drag, dragPreview] = useDrag(
     () => ({
       type: "task",
@@ -130,6 +135,13 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
             {task.description}
           </p>
         )}
+        <ul className="ml-2 list-inside list-disc text-xs">
+          {visibleSteps.map((s, i) => (
+            <li key={i} className={`${s.done ? "line-through" : ""}`}>
+              {s.name}
+            </li>
+          ))}
+        </ul>
         {/*task.tags.length > 0 && (
           <p className="text-sky-600 p-1 text-xs">{task.tags.join(", ")}</p>
         )*/}
