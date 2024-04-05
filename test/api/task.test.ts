@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { NewTask } from "@/lib/db";
 import { PATCH } from "@/app/api/tasks/[task_id]/route";
 
+let task_id: number;
+
 test("GET /api/tasks", async () => {
   const req = new NextRequest("http://localhost:3000/api/tasks", {
     method: "GET",
@@ -51,6 +53,7 @@ describe("POST /api/tasks/[id] = createTask", () => {
     const data = await ret.json();
     expect(ret.status).toBe(200);
     expect(data.task_id).toBeGreaterThan(0);
+    task_id = data.task_id; // Remember this, so runnning test againts real db we use working value
     expect(data.name).toBe(newTask.name);
     expect(data.description).toBe(newTask.description);
     expect(data.board_id).toBe(newTask.board_id);
@@ -59,7 +62,7 @@ describe("POST /api/tasks/[id] = createTask", () => {
 
 describe("PATCH /api/tasks/[id] = updateTask", () => {
   test("PATCH /api/tasks/1 {garbage data} -> ERROR", async () => {
-    const req = new NextRequest("https://google.com/api/tasks/1", {
+    const req = new NextRequest("https://google.com/api/tasks/" + task_id, {
       method: "POST",
       body: JSON.stringify({ action: "daa" }),
     });
@@ -73,9 +76,9 @@ describe("PATCH /api/tasks/[id] = updateTask", () => {
     expect(ret.status).toBe(400);
   });
 
-  test("PATCH /api/tasks/1 {good data} -> SUCCESS", async () => {
+  test("PATCH /api/tasks/" + task_id + " {good data} -> SUCCESS", async () => {
     const oldTask: NewTask = {
-      task_id: 1,
+      task_id: task_id,
       user_id: "test@example.test",
       done: false,
       board_id: 1,
@@ -94,7 +97,7 @@ describe("PATCH /api/tasks/[id] = updateTask", () => {
     const ret = await PATCH(req, { params: { task_id: 1 } });
     const data = await ret.json();
     expect(ret.status).toBe(200);
-    expect(data.task_id).toBe(1);
+    expect(data.task_id).toBe(task_id);
     expect(data.name).toBe(oldTask.name);
     expect(data.description).toBe(oldTask.description);
     expect(data.board_id).toBe(oldTask.board_id);
