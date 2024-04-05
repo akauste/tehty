@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import { NewBoard, createBoard, updateBoardOrder } from "@/lib/db";
+import { NewBoard } from "@/lib/types";
+import { createBoard, updateBoardOrder } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
