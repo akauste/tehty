@@ -66,7 +66,12 @@ export async function addTodo(todo: NewTodo) {
 }
 
 export async function deleteTodo(id: Number, user_id: string) {
-  return db.deleteFrom("todo").where("todo_id", "=", id).execute();
+  return db
+    .deleteFrom("todo")
+    .where(({ eb, and }) =>
+      and([eb("todo_id", "=", id), eb("user_id", "=", user_id)])
+    )
+    .execute();
 }
 
 export async function setTodoOrder(
