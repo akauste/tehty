@@ -228,7 +228,7 @@ export async function userTasks(user_id: string) {
     .execute();
 }
 
-export async function addTask(task: NewTask) {
+export async function createTask(task: NewTask) {
   if (!task.steps) {
     task.steps = [];
   }

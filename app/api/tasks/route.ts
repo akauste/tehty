@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import { NewTask, addTask } from "@/lib/db";
+import { NewTask } from "@/lib/types";
+import { createTask } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid data", data }, { status: 400 });
   }
   data.user_id = user_id;
-  const newRow = await addTask(data);
+  const newRow = await createTask(data);
   console.log(data, newRow);
   return NextResponse.json({ ...newRow });
 }

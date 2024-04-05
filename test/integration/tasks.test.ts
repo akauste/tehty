@@ -1,6 +1,6 @@
+import { Task } from "@/lib/types";
 import {
-  Task,
-  addTask,
+  createTask,
   createBoard,
   deleteUserBoard,
   deleteUserTask,
@@ -41,7 +41,7 @@ describe("kanban board tasks, happy path", () => {
   describe("set of addTask() calls", () => {
     const allTasks: Task[] = [];
     test("addTask(...)", async () => {
-      const task = await addTask({
+      const task = await createTask({
         board_id: myBoards[0],
         user_id: user_id,
         name: "First task",
@@ -59,7 +59,7 @@ describe("kanban board tasks, happy path", () => {
     });
 
     test("addTask(...), add second test on same board", async () => {
-      const task = await addTask({
+      const task = await createTask({
         board_id: myBoards[0],
         user_id: user_id,
         name: "Second task",
@@ -73,7 +73,7 @@ describe("kanban board tasks, happy path", () => {
     });
 
     test("updateTask(...)", async () => {
-      const task = await addTask({
+      const task = await createTask({
         board_id: myBoards[0],
         user_id: user_id,
         name: "To be updated",
