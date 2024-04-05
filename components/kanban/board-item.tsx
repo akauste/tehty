@@ -4,7 +4,7 @@ import { Dispatch, PropsWithChildren, useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDrag, useDrop } from "react-dnd";
 //import { Board, Task } from "./board-list";
-import { Board, Task } from "@/lib/db";
+import { Board, Task } from "@/lib/types";
 import {
   Edit,
   DeleteOutline,

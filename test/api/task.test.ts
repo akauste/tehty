@@ -2,7 +2,7 @@ import { describe, test, expect } from "vitest";
 
 import { GET, POST } from "@/app/api/tasks/route";
 import { NextRequest, NextResponse } from "next/server";
-import { NewTask } from "@/lib/db";
+import { NewTask } from "@/lib/types";
 import { PATCH } from "@/app/api/tasks/[task_id]/route";
 
 let task_id: number;

@@ -1,6 +1,6 @@
 "use client";
 import { useDrag, useDrop } from "react-dnd";
-import { NewTask, Task } from "@/lib/db";
+import { NewTask, Task } from "@/lib/types";
 import {
   Assignment,
   Check,

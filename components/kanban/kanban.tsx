@@ -2,9 +2,8 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardList from "./board-list";
-import { BoardTask } from "@/lib/db";
+import { BoardTask, Board, Task } from "@/lib/types";
 import { Dispatch, useEffect, useReducer, useState } from "react";
-import { Board, Task } from "@/lib/db";
 import AddBoardButton from "./add-board-button";
 import HiddenBoards from "./hidden-boards";
 import { KanbanActions, kanbanReducer } from "@/lib/kanban-reducer";
@@ -98,8 +97,8 @@ export default function Kanban({
       case "append-remove-task":
         let task_ids = state.boards
           .find((b) => b.board_id == action.board_id)
-          ?.tasks.map((t) => t.task_id)
-          .filter((id) => id != action.task.task_id);
+          ?.tasks.map((t: Task) => t.task_id)
+          .filter((id: number) => id != action.task.task_id);
         task_ids?.splice(action.index, 0, action.task.task_id);
         console.warn("Saving task order (ids): " + task_ids);
         if (task_ids) backend.sortTasks(action.board_id, task_ids);

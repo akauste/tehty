@@ -1,4 +1,4 @@
-import { Board, Task } from "@/lib/db";
+import { Board, Task } from "@/lib/types";
 import { Dispatch, useState } from "react";
 import AddTaskModal from "../task/add-task-modal";
 import { KanbanActions } from "@/lib/kanban-reducer";

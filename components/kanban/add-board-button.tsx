@@ -1,7 +1,7 @@
 import { Dispatch, useState } from "react";
 import BoardEditor from "./board-editor";
 import { KanbanActions } from "@/lib/kanban-reducer";
-import { Board } from "@/lib/db";
+import { Board } from "@/lib/types";
 
 const AddBoardButton = ({
   user_id,

@@ -1,5 +1,5 @@
 "use client";
-import { Board, NewBoard } from "@/lib/db";
+import { Board, NewBoard } from "@/lib/types";
 import { bgColors } from "./board-item";
 import { useState } from "react";
 import ColorSelector from "../ui/color-selector";

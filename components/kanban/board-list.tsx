@@ -1,5 +1,5 @@
 "use client";
-import { BoardTask } from "@/lib/db";
+import { BoardTask } from "@/lib/types";
 import { Dispatch, useCallback } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import BoardItem from "./board-item";
