@@ -1,3 +1,5 @@
+[![tests](https://github.com/akauste/tehty/actions/workflows/test.yml/badge.svg)](https://github.com/akauste/tehty/actions/workflows/test.yml)
+
 # TEHTY app
 
 This is a practice project that implements Kanban board and Todo lists. You can check out the working app at
