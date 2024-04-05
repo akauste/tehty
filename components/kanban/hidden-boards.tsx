@@ -1,4 +1,4 @@
-import { Board } from "@/lib/db";
+import { Board } from "@/lib/types";
 import { Dispatch, useState } from "react";
 import { KanbanActions } from "@/lib/kanban-reducer";
 

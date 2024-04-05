@@ -6,7 +6,7 @@ import * as boardIdAppHandler from "@/app/api/boards/[board_id]/route";
 import * as boardsIdTasksAppHandler from "@/app/api/boards/[board_id]/tasks/route";
 import * as tasksAppHandler from "@/app/api/tasks/route";
 import * as tasksIdAppHandler from "@/app/api/tasks/[task_id]/route";
-import { NewBoard, NewTask } from "@/lib/db";
+import { NewBoard, NewTask } from "@/lib/types";
 
 const user_id = "dummy.test@testsuite.local";
 

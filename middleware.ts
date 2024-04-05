@@ -1,10 +1,5 @@
-//import {getServerSession} from "next-auth/next";
-import NextAuth from "next-auth";
-//import {authOptions} from "./app/api/auth/[...nextauth]/route";
 import { auth } from "./auth";
 import { NextResponse } from "next/server";
-//import { authOptions } from "./app/api/auth/[...nextauth]/route";
-//import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 export const config = {
   matcher: [

@@ -1,6 +1,7 @@
 import Kanban from "@/components/kanban/kanban";
 import { auth } from "@/auth";
-import { Task, BoardTask, userBoards, userTasks } from "@/lib/db";
+import { Task, BoardTask } from "@/lib/types";
+import { userBoards, userTasks } from "@/lib/db";
 
 const getBoards = async (user_id: string): Promise<BoardTask[]> => {
   const boards = await userBoards(user_id);

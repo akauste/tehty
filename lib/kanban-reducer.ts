@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { Board, Task } from "@/lib/db";
+import { Board, Task } from "@/lib/types";
 
 type MoveBoardAction = {
   type: "move-board";

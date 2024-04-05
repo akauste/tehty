@@ -1,4 +1,4 @@
-import { Board } from "./db";
+import { Board } from "./types";
 import { SyncActions, kanbanReducer } from "./kanban-reducer";
 import { expect, test, describe } from "vitest";
 

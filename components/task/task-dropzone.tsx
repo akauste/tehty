@@ -1,5 +1,5 @@
 import { useDrop } from "react-dnd";
-import { Task } from "@/lib/db";
+import { Task } from "@/lib/types";
 import { Dispatch } from "react";
 import { KanbanActions } from "@/lib/kanban-reducer";
 import { Add } from "@mui/icons-material";

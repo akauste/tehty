@@ -1,5 +1,5 @@
 "use client";
-import { Board, NewTask, Task } from "@/lib/db";
+import { Board, NewTask, Task } from "@/lib/types";
 import { useState } from "react";
 import { bgColors } from "../kanban/board-item";
 import ColorSelector from "../ui/color-selector";

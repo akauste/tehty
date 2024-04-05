@@ -1,5 +1,5 @@
 import { Assignment } from "@mui/icons-material";
-import { Task } from "@/lib/db";
+import { Task } from "@/lib/types";
 import TaskItem from "./task-item";
 import { Dispatch, useCallback } from "react";
 import { KanbanActions } from "@/lib/kanban-reducer";
