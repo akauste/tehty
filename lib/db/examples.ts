@@ -1,4 +1,5 @@
-import { Board, addTask, createBoard } from "../db";
+import { Board } from "@/lib/types";
+import { createBoard, createTask } from "../db";
 import { Colors } from "@/components/ui/color-selector";
 
 const getDateOffset = (offsetDays: number) => {
@@ -60,7 +61,7 @@ export const createExampleBoards = async (user_id: string) => {
   }
 
   for (const template of taskTemplates) {
-    const task = await addTask({
+    const task = await createTask({
       board_id: boards[0].board_id,
       user_id,
       background_color: "",
