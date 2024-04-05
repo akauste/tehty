@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import { Board, deleteUserBoard, updateUserBoard } from "@/lib/db";
+import { Board } from "@/lib/types";
+import { deleteUserBoard, updateUserBoard } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 type Params = {
