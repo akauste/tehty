@@ -157,7 +157,11 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
             {task.description}
           </p>
         )}
-        <ul className="ml-2 list-inside list-disc text-xs">
+        <ul
+          className={`ml-2 list-inside list-disc text-xs ${
+            clampDescription && visibleSteps.length > 4 ? "line-clamp-3" : ""
+          }`}
+        >
           {visibleSteps.map((s, i) => (
             <li key={i} className={`${s.done ? "line-through" : ""}`}>
               {s.name}
