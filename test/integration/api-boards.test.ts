@@ -1,5 +1,4 @@
 import { testApiHandler } from "next-test-api-route-handler";
-import { NextRequest, NextResponse } from "next/server";
 import { describe, expect, test, vi } from "vitest";
 import * as appHandler from "@/app/api/boards/route";
 import * as boardIdAppHandler from "@/app/api/boards/[board_id]/route";

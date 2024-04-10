@@ -8,13 +8,6 @@ export type Step = {
   done: boolean;
 };
 
-/*const initSteps: Step[] = [
-  { name: "Step 1 (done)", done: true },
-  { name: "Step 2 (not done)", done: false },
-  { name: "Step 3", done: false },
-  { name: "Step 4", done: false },
-];*/
-
 interface StepsProps {
   steps: Step[];
   setSteps: Dispatch<SetStateAction<Step[]>>;
@@ -23,9 +16,7 @@ interface StepsProps {
 const Steps = ({ steps, setSteps }: StepsProps) => {
   const itemsRef: React.Ref<{ [key: number]: HTMLInputElement }> = useRef({});
   const [nextIdx, setNextIdx] = useState(steps.length);
-  /*const [steps, setSteps] = useState(
-    initSteps.map((s, i) => ({ ...s, idx: i }))
-  );*/
+
   const updateStep = (idx: number, name: string, done: boolean) => {
     setSteps((steps) => {
       const newSteps = steps
