@@ -39,6 +39,7 @@ export const RESTbackend: IKanbanBackend = {
       method: "POST",
       body: JSON.stringify(create),
     });
+    if (!res.ok) throw new Error("Failed to create board");
     const data = await res.json();
     return data;
   },
@@ -75,7 +76,9 @@ export const RESTbackend: IKanbanBackend = {
       method: "POST",
       body: JSON.stringify(task),
     });
-    return await ret.json();
+    const data = await ret.json();
+    if (!ret.ok) throw new Error(data.error);
+    return data;
   },
   updateTask: async (task: Task) => {
     const ret = await fetch("/api/tasks/" + task.task_id, {

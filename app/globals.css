@@ -12,6 +12,36 @@
   overflow-y: auto;
 }
 
+@layer components {
+  .toast.info {
+    @apply bg-sky-100;
+  }
+  .toast.info h3 {
+    @apply text-sky-800;
+  }
+
+  .toast.success {
+    @apply bg-green-100;
+  }
+  .toast.success h3 {
+    @apply text-green-800;
+  }
+
+  .toast.warning {
+    @apply bg-yellow-100;
+  }
+  .toast.warning h3 {
+    @apply text-yellow-800;
+  }
+
+  .toast.error {
+    @apply bg-red-100;
+  }
+  .toast.error h3 {
+    @apply text-red-800;
+  }
+}
+
 /*
 :root {
   --foreground-rgb: 0, 0, 0;

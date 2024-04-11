@@ -36,3 +36,37 @@ export interface TaskTable {
 export type Task = Selectable<TaskTable>; // & { tags: string[] };
 export type NewTask = Insertable<TaskTable>;
 export type TaskUpdate = Updateable<TaskTable>;
+
+/*
+  info: default toast type, information about action happening
+  success: something was successfully done
+  warning: warn about something
+  error: display error when something failed
+  debug: status data that should not be shown normally, but what can be easily enabled
+*/
+export type ToastType = "info" | "warning" | "error" | "success" | "debug";
+export type Toast = {
+  id: number;
+  type: ToastType;
+  name: string;
+  description?: string;
+  autoRemove?: number;
+};
+export type ToastUpdate = Partial<Omit<Toast, "id">>;
+
+export type ToastContextType = {
+  toasts: Toast[];
+  addToast: ({
+    type,
+    name,
+    description,
+    autoRemove,
+  }: {
+    type?: ToastType;
+    name: string;
+    description?: string;
+    autoRemove?: number;
+  }) => number; // id
+  updateToast: (id: number, value: ToastUpdate) => void;
+  removeToast: (id: number) => void;
+};

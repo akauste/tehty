@@ -2,6 +2,7 @@ import Kanban from "@/components/kanban/kanban";
 import { auth } from "@/auth";
 import { Task, BoardTask } from "@/lib/types";
 import { userBoards, userTasks } from "@/lib/db";
+import KanbanWrapper from "@/components/kanban/kanban-wrapper";
 
 const getBoards = async (user_id: string): Promise<BoardTask[]> => {
   const boards = await userBoards(user_id);
@@ -24,5 +25,9 @@ export default async function KanbanPage() {
   const boards = await getBoards(user_id);
   console.log(boards);
 
-  return <Kanban user_id={user_id} boards={boards} />;
+  return (
+    <KanbanWrapper>
+      <Kanban user_id={user_id} boards={boards} />
+    </KanbanWrapper>
+  );
 }

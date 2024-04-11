@@ -1,16 +1,15 @@
 "use client";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import BoardList from "./board-list";
-import { BoardTask, Board, Task } from "@/lib/types";
-import { Dispatch, useEffect, useReducer, useState } from "react";
+import { BoardTask, Task, ToastContextType } from "@/lib/types";
+import { useContext, useReducer } from "react";
 import AddBoardButton from "./add-board-button";
 import HiddenBoards from "./hidden-boards";
 import { KanbanActions, kanbanReducer } from "@/lib/kanban-reducer";
-import { CheckCircleOutline, Sync, Update } from "@mui/icons-material";
-import backend, { IKanbanBackend } from "@/lib/backend-api";
+import backend from "@/lib/backend-api";
 import AddTaskButton from "./add-task-button";
 import AddExampleData from "./add-example-data";
+import { ToastContext } from "@/context/toaster-context";
+import Toaster from "../ui/toaster";
 
 const unSyncedActions: any[] = [];
 
@@ -25,57 +24,90 @@ export default function Kanban({
     boards,
     unSyncedActions,
   });
-  const [syncStatus, setSyncStatus] = useState({ sync: false, error: "" });
+  const { addToast, updateToast, removeToast } = useContext(
+    ToastContext
+  ) as ToastContextType;
 
   const hiddenBoards = state.boards.filter((b) => !b.show);
   const visibleBoards = state.boards.filter((b) => b.show);
 
   const dispatchBackend = (action: KanbanActions) => {
     switch (action.type) {
-      case "add-board":
+      case "add-board": {
+        const toastId = addToast({
+          name: "Creating board",
+        });
         backend
           .createBoard({
             ...action.board,
             user_id,
             orderno: state.boards.length,
           })
-          .then((newBoard) =>
+          .then((newBoard) => {
             dispatch({
               type: "add-board",
               board: newBoard,
-            })
-          )
-          .catch((err) =>
-            setSyncStatus({ sync: false, error: "Failed to create board" })
-          );
+            });
+            updateToast(toastId, {
+              type: "success",
+              description: "Board created",
+              autoRemove: 500,
+            });
+          })
+          .catch((err) => {
+            updateToast(toastId, {
+              type: "error",
+              description: "Failed to create board",
+            });
+          });
         break;
-      case "update-board":
+      }
+      case "update-board": {
+        const toastId = addToast({
+          type: "debug",
+          name: "Update board",
+        });
         backend
           .updateBoard(action.board)
-          //.then((ret) => console.warn(ret))
+          .then((ret) =>
+            updateToast(toastId, { type: "success", autoRemove: 1 })
+          )
           .catch((err) => {
+            updateToast(toastId, {
+              type: "error",
+              description: "Failed to update board " + err.message,
+            });
             if (err) console.warn("Received ERROR: ", err);
-            setSyncStatus({ sync: false, error: "Failed to update board" });
           });
         dispatch(action);
         break;
-      case "delete-board":
-        backend.deleteBoard(action.board_id).catch((err) => {
-          setSyncStatus({
-            sync: false,
-            error: "Failed to delete board, please refresh page",
+      }
+      case "delete-board": {
+        const toastId = addToast({ name: "Deleting board" });
+        backend
+          .deleteBoard(action.board_id)
+          .then((res) => updateToast(toastId, { autoRemove: 1 }))
+          .catch((err) => {
+            updateToast(toastId, {
+              type: "error",
+              description: "Failed to delete board, please refresh page",
+            });
           });
-        });
         dispatch(action);
         break;
-      case "move-board":
+      }
+      case "move-board": {
+        const toastId = addToast({ name: "Move board" });
         const board_ids = state.boards
           .map((b) => b.board_id)
           .filter((id) => id != action.board_id);
         board_ids.splice(action.atIndex, 0, action.board_id);
-        backend.sortBoards(board_ids);
+        backend
+          .sortBoards(board_ids)
+          .then((res) => updateToast(toastId, { autoRemove: 1 }));
         dispatch(action);
         break;
+      }
       //case "move-task":
       //case "clear-unsynced":
       case "update-task":
@@ -83,55 +115,73 @@ export default function Kanban({
         backend.updateTask(action.task);
         dispatch(action);
         break;
-      case "append-task":
-        //const newTask = await backend.createTask(action.task);
-        backend.createTask(action.task).then((newTask) => {
-          if (newTask.due_date) newTask.due_date = new Date(newTask.due_date);
-          dispatch({
-            type: "append-task",
-            board_id: newTask.board_id,
-            task: newTask,
-          });
-        });
+      case "append-task": {
+        const toastId = addToast({ name: "Create task: " + action.task.name });
+        backend
+          .createTask(action.task)
+          .then((newTask) => {
+            if (newTask.due_date) newTask.due_date = new Date(newTask.due_date);
+            dispatch({
+              type: "append-task",
+              board_id: newTask.board_id,
+              task: newTask,
+            });
+            removeToast(toastId);
+          })
+          .catch((err) =>
+            updateToast(toastId, {
+              type: "error",
+              description: "Failed to create task " + err.message,
+            })
+          );
         break;
-      case "append-remove-task":
+      }
+      case "append-remove-task": {
+        const toastId = addToast({ type: "info", name: "Move task" });
         let task_ids = state.boards
           .find((b) => b.board_id == action.board_id)
           ?.tasks.map((t: Task) => t.task_id)
           .filter((id: number) => id != action.task.task_id);
         task_ids?.splice(action.index, 0, action.task.task_id);
         console.warn("Saving task order (ids): " + task_ids);
-        if (task_ids) backend.sortTasks(action.board_id, task_ids);
+        if (task_ids)
+          backend
+            .sortTasks(action.board_id, task_ids)
+            .then((res) => removeToast(toastId))
+            .catch((err) =>
+              updateToast(toastId, {
+                type: "error",
+                description:
+                  "Failed to move task. Please refresh page. Error:" +
+                  err.message,
+              })
+            );
         dispatch(action);
         break;
-      case "remove-task":
-        backend.deleteTask(action.task_id);
+      }
+      case "remove-task": {
+        const toastId = addToast({ name: "Delete task" });
+        backend
+          .deleteTask(action.task_id)
+          .then((res) => removeToast(toastId))
+          .catch((err) =>
+            updateToast(toastId, {
+              type: "error",
+              description: "Failed to delete task. Error: " + err.message,
+            })
+          );
         dispatch(action);
         break;
+      }
       default:
         dispatch(action);
     }
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      {syncStatus.error && (
-        <div className="bg-red-300 border border-red-700 rounded p-2 text-red-800">
-          <button
-            className="float-right"
-            onClick={() => setSyncStatus((s) => ({ ...s, error: "" }))}
-          >
-            X
-          </button>
-          {syncStatus.error}
-        </div>
-      )}
+    <>
       <div className="flex w-full my-2 gap-2">
         <h1 className="flex-grow text-2xl bold">Kanban board</h1>
-        <div>
-          {syncStatus.sync ? "Syncing" : ""}
-          {syncStatus.error ? "Failed to sync" : ""}
-        </div>
         {hiddenBoards.length > 0 && (
           <HiddenBoards
             hiddenBoards={hiddenBoards}
@@ -183,6 +233,7 @@ export default function Kanban({
         </section>
       )}
       <br />
-    </DndProvider>
+      <Toaster />
+    </>
   );
 }
