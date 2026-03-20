@@ -28,8 +28,8 @@ export default auth((req) => {
 
   console.log("Authentication should happen", req.auth, req.nextUrl.pathname);
   if (!req.auth?.user && req.nextUrl.pathname != "/") {
-    return NextResponse.redirect(
-      process.env.NEXT_PUBLIC_URL + "/api/auth/signin"
-    );
+    const signInUrl = new URL("/api/auth/signin", req.url);
+    console.log("Redirect to sign-in", signInUrl.toString());
+    return NextResponse.redirect(signInUrl);
   }
 });

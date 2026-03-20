@@ -14,4 +14,10 @@ export const {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     })],
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  trustHost: true,
+  url: process.env.AUTH_URL ?? process.env.NEXTAUTH_URL,
+
+  // If needed by your provider setups or cookie domain, define here:
+  // url: process.env.AUTH_URL ?? process.env.NEXTAUTH_URL,
 })
