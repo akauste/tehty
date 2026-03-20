@@ -1,6 +1,6 @@
 import { useDrop } from "react-dnd";
 import { Task } from "@/lib/types";
-import { Dispatch } from "react";
+import { Dispatch, useRef, useEffect } from "react";
 import { KanbanActions } from "@/lib/kanban-reducer";
 import { Add } from "@mui/icons-material";
 
@@ -25,10 +25,15 @@ const TaskDropzone = ({ board_id, index, dispatch }: TaskDropzoneProps) => {
     }),
     []
   );
+  const ref = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    drop(ref);
+  }, [drop]);
 
   return (
     <li
-      ref={(node) => drop(node)}
+      ref={ref}
       className="flex-grow p-2 text-center bg-sky-200 opacity-0 hover:opacity-100"
     >
       <button className="mt-2 w-full border border-transparent hover:border-sky-600 hover:text-sky-800 dark:hover:text-sky-200">

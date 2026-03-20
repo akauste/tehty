@@ -2,7 +2,7 @@
 import { NewTodo, Todo } from "@/lib/db";
 import TodoItem from "./todo-item";
 import TodoAdd from "./todo-add";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { useDrop } from "react-dnd";
 
 const addTodo = async (todo: NewTodo): Promise<Todo> => {
@@ -75,10 +75,15 @@ const TodoList: React.FC<{ user_id: string; list: Todo[] }> = ({
   };
 
   const [, drop] = useDrop(() => ({ accept: "todo" }));
+  const ref = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    drop(ref);
+  }, [drop]);
 
   return (
     <>
-      <ul className="my-8 w-full" ref={drop}>
+      <ul className="my-8 w-full" ref={ref}>
         {todos.map((t, i) => (
           <TodoItem
             key={i}

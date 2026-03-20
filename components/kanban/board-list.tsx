@@ -1,6 +1,6 @@
 "use client";
 import { BoardTask } from "@/lib/types";
-import { Dispatch, useCallback } from "react";
+import { Dispatch, useCallback, useRef, useEffect } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import BoardItem from "./board-item";
 import { KanbanActions } from "@/lib/kanban-reducer";
@@ -25,9 +25,14 @@ const BoardList: React.FC<{
   };
 
   const [, drop] = useDrop(() => ({ accept: "board" }));
+  const ref = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    drop(ref);
+  }, [drop]);
 
   return (
-    <ul className="flex w-full min-h-100 space-x-4" ref={drop}>
+    <ul className="flex w-full min-h-100 space-x-4" ref={ref}>
       {boards
         .filter((b) => b.show)
         .map((b, i) => (

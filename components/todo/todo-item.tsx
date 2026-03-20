@@ -1,6 +1,6 @@
 "use client";
 import { Todo, setTodoDone } from "@/lib/db";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -73,10 +73,15 @@ const TodoItem: React.FC<ITodo> = ({
     }),
     [findTodo, moveTodo]
   );
+  const ref = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    drag(drop(ref));
+  }, [drag, drop]);
 
   return (
     <li
-      ref={(node) => drag(drop(node))}
+      ref={ref}
       className={`flex flex-row w-full space-between my-2`}
     >
       <input

@@ -4,20 +4,21 @@ import { deleteUserBoard, updateUserBoard } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 type Params = {
-  board_id: number;
+  board_id: string;
 };
 
-export async function GET(req: NextRequest, context: { params: Params }) {
+export async function GET(req: NextRequest, context: { params: Promise<Params> }) {
   // Implement get board, this is now only for completenes,
   // the nextjs frontend does not use this
 }
 
 // POST is actualy at: POST /api/boards (we doent know the id)
 
-export async function PATCH(req: NextRequest, context: { params: Params }) {
+export async function PATCH(req: NextRequest, context: { params: Promise<Params> }) {
   const session = await auth();
   const user_id = session?.user?.email;
-  const board_id = context.params.board_id;
+  const { board_id: board_id_str } = await context.params;
+  const board_id = parseInt(board_id_str, 10);
 
   if (!user_id)
     return NextResponse.json(
@@ -44,10 +45,11 @@ export async function PATCH(req: NextRequest, context: { params: Params }) {
   return NextResponse.json({ ...newRow });
 }
 
-export async function DELETE(req: NextRequest, context: { params: Params }) {
+export async function DELETE(req: NextRequest, context: { params: Promise<Params> }) {
   const session = await auth();
   const user_id = session?.user?.email;
-  const board_id = context.params.board_id;
+  const { board_id: board_id_str } = await context.params;
+  const board_id = parseInt(board_id_str, 10);
 
   if (!user_id)
     return NextResponse.json(

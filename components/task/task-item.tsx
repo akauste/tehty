@@ -10,7 +10,7 @@ import {
   Expand,
   MinimizeOutlined,
 } from "@mui/icons-material";
-import { Dispatch, useState } from "react";
+import { Dispatch, useState, useRef, useEffect } from "react";
 import AddTaskModal from "./add-task-modal";
 import { KanbanActions } from "@/lib/kanban-reducer";
 import DropdownMenu from "../ui/dropdown-menu";
@@ -83,9 +83,15 @@ const TaskItem: React.FC<TasksProps> = ({ task, move, find, dispatch }) => {
 
   const now = new Date();
   const isLate = task.due_date && task.due_date < now;
+  const ref = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    drag(drop(ref));
+  }, [drag, drop]);
+
   return (
     <li
-      ref={(node) => drag(drop(node))}
+      ref={ref}
       className="border-b border-slate-600 hover:border-slate-700"
     >
       <header

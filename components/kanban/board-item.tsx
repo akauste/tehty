@@ -1,6 +1,6 @@
 "use client";
 import { Todo, setTodoDone } from "@/lib/db";
-import { Dispatch, PropsWithChildren, useEffect, useState } from "react";
+import { Dispatch, PropsWithChildren, useEffect, useState, useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDrag, useDrop } from "react-dnd";
 //import { Board, Task } from "./board-list";
@@ -90,7 +90,10 @@ const BoardItem: React.FC<IBoard> = ({
 
   return (
     <li
-      ref={(node) => drag(drop(node))}
+      ref={(node) => {
+        drag(node);
+        drop(node);
+      }}
       className="bg-slate-200 dark:bg-slate-700 flex-1 flex-grow min-h-96 border border-slate-500 shadow-sm shadow-slate-500 space-y-2 flex flex-col"
     >
       <header

@@ -16,7 +16,6 @@ export const {
     })],
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
-  url: process.env.AUTH_URL ?? process.env.NEXTAUTH_URL,
 
   // If needed by your provider setups or cookie domain, define here:
   // url: process.env.AUTH_URL ?? process.env.NEXTAUTH_URL,
