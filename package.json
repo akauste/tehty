@@ -14,6 +14,9 @@
     "full:test": "docker-compose down && docker-compose up -d && vitest run --config ./vitest.config.all.ts && docker-compose down",
     "full:coverage": "docker-compose down && docker-compose up -d && vitest run --config ./vitest.config.all.ts --coverage && docker-compose down"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
