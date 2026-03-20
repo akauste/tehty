@@ -50,6 +50,7 @@ export default async function RootLayout({
             {session?.user ? (
               <Link
                 href="/api/auth/signout"
+                prefetch={false}
                 className="py-1 px-2 border border-gray-700 rounded-lg bg-gray-600 dark:bg-gray-900 text-slate-200 hover:text-white text-xs"
               >
                 <Logout /> Sign out
@@ -64,6 +65,7 @@ export default async function RootLayout({
             ) : (
               <Link
                 href="/api/auth/signin"
+                prefetch={false}
                 className="py-1 px-2 border border-gray-700 rounded-lg bg-gray-600 dark:bg-gray-900 text-slate-200 hover:text-white text-xs"
               >
                 <Login /> Sign in
