@@ -42,12 +42,13 @@ export default async function Home() {
       </ol>
       {!session?.user && (
         <p className="p-10 text-center">
-          <a
+          <Link
             href="/api/auth/signin"
+            prefetch={false}
             className="p-4 bg-sky-600 text-sky-100 hover:bg-sky-500 hover:text-white rounded-xl"
           >
             Sign in
-          </a>
+          </Link>
         </p>
       )}
     </>
