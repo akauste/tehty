@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import HiddenBoards from "../hidden-boards";
-import { afterEach } from "node:test";
+import { afterEach } from "vitest";
 import { Board } from "@/lib/types";
 
 const dispatch = vi.fn();
