@@ -26,7 +26,7 @@ export const config = {
 export default auth((req) => {
   // req.auth
 
-  console.log("Authentication should happen", req.auth, req.nextUrl.pathname);
+  console.log("Authentication should happen", req.auth ? "authenticated" : "not authenticated", req.nextUrl.pathname, req.url);
   if (!req.auth?.user && req.nextUrl.pathname != "/") {
     const signInUrl = new URL("/api/auth/signin", req.url);
     console.log("Redirect to sign-in", signInUrl.toString());
