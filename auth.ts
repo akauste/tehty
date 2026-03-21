@@ -15,7 +15,7 @@ export const {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     })],
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
-  trustHost: true,
+  trustHost: process.env.NODE_ENV === "production" ? ["tehty-akauste.vercel.app"] : true,
 
   // If needed by your provider setups or cookie domain, define here:
   // url: process.env.AUTH_URL ?? process.env.NEXTAUTH_URL,
